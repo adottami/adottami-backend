@@ -18,6 +18,9 @@
     "types:check": "tsc --pretty --noEmit",
     "db:push": "dotenv -e .env.development -- yarn prisma db push",
     "migrate:dev": "dotenv -e .env.development -- yarn prisma migrate dev",
+    "db:up": "docker-compose up -d",
+    "db:stop": "docker-compose stop",
+    "db:down": "docker-compose down",
     "pre:commit": "lint-staged",
     "pre:push": "concurrently 'yarn types:check' 'yarn lint . --max-warnings=0' 'yarn style:check .' 'yarn test'",
     "prepare": "husky install"
