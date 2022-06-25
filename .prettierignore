@@ -5,5 +5,8 @@
 # tests
 /coverage
 
+# prisma
+/prisma/migrations
+
 # build
 /build

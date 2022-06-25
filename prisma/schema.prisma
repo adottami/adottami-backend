@@ -6,3 +6,50 @@ datasource db {
 generator client {
   provider = "prisma-client-js"
 }
+
+model User {
+  id           String        @id @default(uuid())
+  name         String
+  email        String        @unique
+  password     String
+  phoneNumber  String
+  isVerified   Boolean       @default(false)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  publications Publication[]
+}
+
+model Publication {
+  id              String         @id @default(uuid())
+  author          User           @relation(fields: [authorId], references: [id])
+  authorId        String
+  name            String
+  description     String
+  category        String
+  gender          String
+  breed           String
+  weightInGrams   Int
+  ageInYears      Int
+  zipCode         String
+  city            String
+  state           String
+  hidePhoneNumber Boolean        @default(false)
+  images          Image[]
+  characterists   Characterist[]
+}
+
+model Image {
+  id            String      @id @default(uuid())
+  publication   Publication @relation(fields: [publicationId], references: [id])
+  publicationId String
+  url           String
+  createdAt     DateTime    @default(now())
+}
+
+model Characterist {
+  id            String      @id @default(uuid())
+  publication   Publication @relation(fields: [publicationId], references: [id])
+  publicationId String
+  name          String
+  createdAt     DateTime    @default(now())
+}
