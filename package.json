@@ -1,0 +1,11 @@
+{
+  "name": "adottami-backend",
+  "version": "0.0.0",
+  "repository": "git@github.com:es-2021-2-grupo-2/adottami-backend.git",
+  "private": true,
+  "dependencies": {},
+  "devDependencies": {
+    "ts-node": "^10.8.1",
+    "typescript": "^4.7.4"
+  }
+}
