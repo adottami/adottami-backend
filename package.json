@@ -16,11 +16,14 @@
     "test": "node --expose-gc --no-compilation-cache ./node_modules/.bin/jest --logHeapUsage --maxWorkers=${JEST_MAX_WORKERS:=50%}",
     "test:ci": "JEST_MAX_WORKERS=1 yarn test",
     "types:check": "tsc --pretty --noEmit",
+    "db:push": "dotenv -e .env.development -- yarn prisma db push",
+    "migrate:dev": "dotenv -e .env.development -- yarn prisma migrate dev",
     "pre:commit": "lint-staged",
     "pre:push": "concurrently 'yarn types:check' 'yarn lint . --max-warnings=0' 'yarn style:check .' 'yarn test'",
     "prepare": "husky install"
   },
   "dependencies": {
+    "@prisma/client": "^3.15.2",
     "dotenv": "^16.0.1"
   },
   "devDependencies": {
@@ -34,6 +37,7 @@
     "chokidar": "^3.5.3",
     "concurrently": "^7.2.2",
     "cross-env": "^7.0.3",
+    "dotenv-cli": "^5.1.0",
     "eslint": "^8.18.0",
     "eslint-config-airbnb-base": "15.0.0",
     "eslint-config-prettier": "^8.5.0",
@@ -47,6 +51,7 @@
     "lint-staged": "^13.0.3",
     "nodemon": "^2.0.18",
     "prettier": "^2.7.1",
+    "prisma": "^3.15.2",
     "rimraf": "^3.0.2",
     "ts-node": "^10.8.1",
     "typescript": "^4.7.4"
