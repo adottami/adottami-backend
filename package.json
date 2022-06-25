@@ -18,7 +18,9 @@
     "pre:push": "concurrently 'yarn types:check' 'yarn lint . --max-warnings=0' 'yarn style:check .'",
     "prepare": "husky install"
   },
-  "dependencies": {},
+  "dependencies": {
+    "dotenv": "^16.0.1"
+  },
   "devDependencies": {
     "@swc/cli": "^0.1.57",
     "@swc/core": "^1.2.205",
