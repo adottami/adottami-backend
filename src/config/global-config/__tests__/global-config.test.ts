@@ -5,5 +5,6 @@ describe('Global config', () => {
     const globalConfig = new GlobalConfig();
     expect(globalConfig.mode()).toBe('test');
     expect(globalConfig.port()).toBe(3333);
+    expect(globalConfig.allowedCORSOrigins()).toEqual(['http://localhost:3000']);
   });
 });

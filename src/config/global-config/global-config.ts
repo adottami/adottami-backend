@@ -1,5 +1,5 @@
-import * as dotenv from 'dotenv';
-import * as path from 'path';
+import dotenv from 'dotenv';
+import path from 'path';
 
 import { PROJECT_ROOT_DIRECTORY } from './constants';
 import { Mode } from './types';
@@ -7,11 +7,13 @@ import { Mode } from './types';
 export class GlobalConfig {
   private _mode: Mode;
   private _port: number;
+  private _allowedCORSOrigins: string[];
 
   constructor() {
     this._mode = process.env.NODE_ENV ?? 'development';
     this.loadEnvironmentVariables(this.mode());
     this._port = Number(process.env.PORT);
+    this._allowedCORSOrigins = process.env.ALLOWED_CORS_ORIGINS?.split(',') ?? ['*'];
   }
 
   mode(): Mode {
@@ -20,6 +22,10 @@ export class GlobalConfig {
 
   port(): number {
     return this._port;
+  }
+
+  allowedCORSOrigins(): string[] {
+    return this._allowedCORSOrigins;
   }
 
   private loadEnvironmentVariables(mode: Mode) {

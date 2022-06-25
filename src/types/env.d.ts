@@ -4,5 +4,6 @@ declare namespace NodeJS {
   interface ProcessEnv {
     readonly NODE_ENV?: Mode;
     readonly PORT: string;
+    readonly ALLOWED_CORS_ORIGINS?: string;
   }
 }
