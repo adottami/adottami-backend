@@ -22,7 +22,4 @@
 
 -
 
-<!-- If you are adding a visual change, please consider adding a screenshot -->
-<screenshot>
-
 Closes #<issue>.
