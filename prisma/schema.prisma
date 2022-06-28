@@ -30,6 +30,7 @@ model Publication {
   zipCode         String
   city            String
   state           String
+  isArchived      Boolean
   hidePhoneNumber Boolean  @default(false)
   createdAt       DateTime @default(now())
 
