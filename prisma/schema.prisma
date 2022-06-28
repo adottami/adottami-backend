@@ -8,19 +8,18 @@ generator client {
 }
 
 model User {
-  id           String        @id @default(uuid())
-  name         String
-  email        String        @unique
-  password     String
-  phoneNumber  String
+  id          String   @id @default(uuid())
+  name        String
+  email       String   @unique
+  password    String
+  phoneNumber String
+  createdAt   DateTime @default(now())
+
   publications Publication[]
-  createdAt    DateTime      @default(now())
 }
 
 model Publication {
-  id              String         @id @default(uuid())
-  author          User           @relation(fields: [authorId], references: [id])
-  authorId        String
+  id              String   @id @default(uuid())
   name            String
   description     String
   category        String
@@ -31,24 +30,31 @@ model Publication {
   zipCode         String
   city            String
   state           String
-  hidePhoneNumber Boolean        @default(false)
-  images          Image[]
-  characterists   Characterist[]
-  createdAt       DateTime       @default(now())
+  hidePhoneNumber Boolean  @default(false)
+  createdAt       DateTime @default(now())
+
+  author   User   @relation(fields: [authorId], references: [id])
+  authorId String
+
+  images Image[]
+
+  characterists Characterist[]
 }
 
 model Image {
-  id            String      @id @default(uuid())
+  id        String   @id @default(uuid())
+  url       String
+  createdAt DateTime @default(now())
+
   publication   Publication @relation(fields: [publicationId], references: [id])
   publicationId String
-  url           String
-  createdAt     DateTime    @default(now())
 }
 
 model Characterist {
-  id            String      @id @default(uuid())
+  id        String   @id @default(uuid())
+  name      String
+  createdAt DateTime @default(now())
+
   publication   Publication @relation(fields: [publicationId], references: [id])
   publicationId String
-  name          String
-  createdAt     DateTime    @default(now())
 }
