@@ -13,9 +13,6 @@ model User {
   email        String        @unique
   password     String
   phoneNumber  String
-  isVerified   Boolean       @default(false)
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
   publications Publication[]
 }
 
