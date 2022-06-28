@@ -24,15 +24,16 @@ model Publication {
   description     String
   category        String
   gender          String
-  breed           String
-  weightInGrams   Int
-  ageInYears      Int
+  breed           String?
+  weightInGrams   Int?
+  ageInYears      Int?
   zipCode         String
   city            String
   state           String
   hidePhoneNumber Boolean        @default(false)
   images          Image[]
   characterists   Characterist[]
+  createdAt       DateTime       @default(now())
 }
 
 model Image {
