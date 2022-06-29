@@ -1,4 +1,15 @@
-import swcConfig from './.swcrc.json';
+import baseSWCConfig from './.swcrc.json';
+
+const swcConfig = {
+  ...baseSWCConfig,
+  jsc: {
+    ...baseSWCConfig.jsc,
+    paths: {
+      ...baseSWCConfig.jsc.paths,
+      '@/*': ['src/*'],
+    },
+  },
+};
 
 export default {
   roots: ['<rootDir>'],
