@@ -4,7 +4,7 @@
   "repository": "git@github.com:es-2021-2-grupo-2/adottami-backend.git",
   "private": true,
   "scripts": {
-    "dev": "concurrently 'yarn build:generate --watch' 'nodemon'",
+    "dev": "concurrently \"yarn build:generate --watch\" \"nodemon\"",
     "start": "node build/shared/infra/http/server.js",
     "build": "yarn build:clear && yarn build:generate",
     "build:clear": "rimraf build/*",
@@ -22,7 +22,7 @@
     "db:stop": "docker-compose stop",
     "db:down": "docker-compose down",
     "pre:commit": "lint-staged",
-    "pre:push": "concurrently 'yarn types:check' 'yarn lint . --max-warnings=0' 'yarn style:check .' 'yarn test'",
+    "pre:push": "concurrently \"yarn types:check\" \"yarn lint . --max-warnings=0\" \"yarn style:check .\" \"yarn test\"",
     "prepare": "husky install"
   },
   "dependencies": {
