@@ -1,4 +1,4 @@
-import developmentSWCConfig from './.swcrc.development.json';
+import swcConfig from './.swcrc.json';
 
 export default {
   roots: ['<rootDir>'],
@@ -30,7 +30,7 @@ export default {
   },
 
   transform: {
-    '.*\\.(j|t)s$': ['@swc/jest', developmentSWCConfig],
+    '.*\\.(j|t)s$': ['@swc/jest', swcConfig],
   },
 
   watchPlugins: ['jest-watch-typeahead/filename', 'jest-watch-typeahead/testname'],
