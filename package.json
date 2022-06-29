@@ -9,7 +9,7 @@
     "build": "yarn build:clear && yarn build:generate",
     "build:clear": "rimraf build/*",
     "build:generate": "swc src --config-file .swcrc.json --out-dir build",
-    "lint": "eslint --ext 'js,jsx,ts,tsx' --cache",
+    "lint": "eslint --ext js,jsx,ts,tsx --cache",
     "style": "prettier --loglevel warn --ignore-unknown --no-error-on-unmatched-pattern",
     "style:check": "yarn style --check",
     "style:format": "yarn style --write",
@@ -22,7 +22,7 @@
     "db:stop": "docker-compose stop",
     "db:down": "docker-compose down",
     "pre:commit": "lint-staged",
-    "pre:push": "concurrently \"yarn types:check\" \"yarn lint . --max-warnings=0\" \"yarn style:check .\" \"yarn test\"",
+    "pre:push": "concurrently \"yarn types:check\" \"yarn lint . --max-warnings 0\" \"yarn style:check .\" \"yarn test\"",
     "prepare": "husky install"
   },
   "dependencies": {
