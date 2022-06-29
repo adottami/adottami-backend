@@ -1,0 +1,7 @@
+{
+  "verbose": false,
+  "watch": ["build"],
+  "ext": "js,ts,json",
+  "delay": 100,
+  "exec": "yarn cross-env NODE_ENV=development yarn start"
+}
