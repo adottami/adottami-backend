@@ -7,7 +7,7 @@ import BadRequestHTTPError from '@/shared/infra/http/errors/bad-request-http-err
 
 import CreateUserUseCase from '../create-user-use-case';
 
-describe('Create user controller', () => {
+describe('Create user use case', () => {
   let userRepository: UserRepository;
   let hashProvider: HashProvider;
   let useCase: CreateUserUseCase;
@@ -28,8 +28,13 @@ describe('Create user controller', () => {
 
     const user = await useCase.execute(userData);
 
-    expect(user).toHaveProperty('id');
     expect(user).toBeInstanceOf(User);
+    expect(user).toHaveProperty('id');
+    expect(user).toHaveProperty('createdAt');
+    expect(user.name).toBe(userData.name);
+    expect(user.email).toBe(userData.email);
+    expect(user.password).not.toBe(userData.password);
+    expect(user.phoneNumber).toBe(userData.phoneNumber);
   });
 
   it('should be able to create a new user with encrypted password', async () => {
@@ -44,14 +49,13 @@ describe('Create user controller', () => {
 
     const samePasswords = await hashProvider.compare(userData.password, user.password);
 
-    expect(user).toHaveProperty('id');
     expect(userData.password === user.password).toBeFalsy();
     expect(samePasswords).toBeTruthy();
   });
 
   it('should not be able to create a new user with email already registered', async () => {
     const userData1 = {
-      name: 'Test name',
+      name: 'Test name 1',
       email: 'test@test.com.br',
       password: '1234',
       phoneNumber: '123456789',

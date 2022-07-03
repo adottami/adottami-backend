@@ -1,29 +1,37 @@
 /**
- * @jest-environment ./prisma/prisma-test-environment
+ * @jest-environment ./prisma/prisma-test-environment.ts
  */
 
 import request from 'supertest';
 
 import app from '@/shared/infra/http/app';
+import HTTPResponse from '@/shared/infra/http/models/http-response';
 import prisma from '@/shared/infra/prisma/prisma-client';
 
 describe('Create user controller', () => {
   const URL = '/users';
 
-  afterEach(async () => {
+  beforeEach(async () => {
     await prisma.user.deleteMany();
   });
 
   it('should be able to create a new user', async () => {
-    const response = await request(app).post(URL).send({
+    const userData = {
       name: 'Test name',
-      email: 'test@gmail.com',
+      email: 'test@test.com.br',
       password: '1234',
       phoneNumber: '123456789',
-    });
+    };
 
-    expect(response.statusCode).toBe(201);
+    const response = await request(app).post(URL).send(userData);
+
+    expect(response.statusCode).toBe(HTTPResponse.STATUS_CODE.CREATED);
     expect(response.body).toHaveProperty('id');
+    expect(response.body).toHaveProperty('createdAt');
+    expect(response.body.name).toBe(userData.name);
+    expect(response.body.email).toBe(userData.email);
+    expect(response.body.password).not.toBe(userData.password);
+    expect(response.body.phoneNumber).toBe(userData.phoneNumber);
   });
 
   it('should not be able to create a new user with email already registered', async () => {
@@ -43,6 +51,7 @@ describe('Create user controller', () => {
       phoneNumber: '123456789',
     });
 
-    expect(response.statusCode).toBe(400);
+    expect(response.statusCode).toBe(HTTPResponse.STATUS_CODE.BAD_REQUEST);
+    expect(response.body.message).toBe('User already exists');
   });
 });
