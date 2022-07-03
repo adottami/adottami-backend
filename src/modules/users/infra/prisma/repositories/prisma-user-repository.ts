@@ -13,7 +13,7 @@ class PrismaUserRepository implements UserRepository {
       },
     });
 
-    return user;
+    return User.create(user);
   }
 
   async findByEmail(email: string): Promise<User | null> {
@@ -21,7 +21,7 @@ class PrismaUserRepository implements UserRepository {
       where: { email },
     });
 
-    return user || null;
+    return user ? User.create(user) : null;
   }
 }
 

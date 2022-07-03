@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
-import User from '@/modules/users/entities/user';
 import HTTPResponse from '@/shared/infra/http/models/http-response';
 import UseCaseController from '@/shared/use-cases/use-case-controller';
 
@@ -20,7 +19,7 @@ class CreateUserController implements UseCaseController {
       phoneNumber,
     });
 
-    const userJson = User.toJson(user);
+    const userJson = user.toJson();
 
     return new HTTPResponse(response).created(userJson);
   }
