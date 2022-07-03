@@ -14,7 +14,6 @@ jobs:
     services:
       postgres:
         image: postgres:14.4
-        container_name: adottami-postgres-ci
         env:
           POSTGRES_USER: adottami-postgres-ci
           POSTGRES_PASSWORD: adottami-postgres-ci
