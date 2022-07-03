@@ -1,3 +1,4 @@
+import type { JestEnvironmentConfig, EnvironmentContext } from '@jest/environment';
 import { PrismaClient } from '@prisma/client';
 import { execSync } from 'child_process';
 import dotenv from 'dotenv';
@@ -5,13 +6,19 @@ import NodeEnvironment from 'jest-environment-node';
 import path from 'path';
 import { v4 as uuid } from 'uuid';
 
-import { PROJECT_ROOT_DIRECTORY } from '../src/config/global-config/constants';
+import { PROJECT_ROOT_DIRECTORY } from '@/config/global-config/constants';
+
+const prismaBinary = path.join(PROJECT_ROOT_DIRECTORY, 'node_modules', '.bin', 'prisma');
 
 dotenv.config({ path: path.join(PROJECT_ROOT_DIRECTORY, '.env.test') });
 
 class PrismaTestEnvironment extends NodeEnvironment {
-  constructor(config) {
-    super(config);
+  private readonly schema: string;
+  private readonly client: PrismaClient;
+  private readonly url: string;
+
+  constructor(config: JestEnvironmentConfig, _context: EnvironmentContext) {
+    super(config, _context);
 
     this.schema = `test_${uuid()}`;
     this.client = new PrismaClient();
@@ -22,7 +29,7 @@ class PrismaTestEnvironment extends NodeEnvironment {
     process.env.DATABASE_URL = this.url;
     this.global.process.env.DATABASE_URL = this.url;
 
-    execSync(`yarn prisma migrate dev`);
+    execSync(`${prismaBinary} db push --skip-generate`);
 
     return super.setup();
   }
