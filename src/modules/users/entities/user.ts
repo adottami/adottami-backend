@@ -1,24 +1,34 @@
-import Entity from '@/shared/entities/entity';
+import Entity, { EntityProps } from '@/shared/entities/entity';
+
+interface UserProps extends EntityProps {
+  name: string;
+  email: string;
+  password: string;
+  phoneNumber: string;
+}
 
 class User extends Entity {
-  readonly name!: string;
-  readonly email!: string;
-  readonly password!: string;
-  readonly phoneNumber!: string;
+  readonly name: string;
+  readonly email: string;
+  readonly password: string;
+  readonly phoneNumber: string;
 
-  private constructor({ id, createdAt, ...props }: User) {
+  private constructor({ id, name, email, password, phoneNumber, createdAt }: UserProps) {
     super({ id, createdAt });
-    Object.assign(this, props);
+    this.name = name;
+    this.email = email;
+    this.password = password;
+    this.phoneNumber = phoneNumber;
   }
 
-  static create(user: User) {
-    const userCreated = new User(user);
+  static create(userProps: UserProps) {
+    const user = new User(userProps);
 
-    return userCreated;
+    return user;
   }
 
-  static toJson(user: User) {
-    const { id, name, email, phoneNumber, createdAt } = user;
+  toJson() {
+    const { id, name, email, phoneNumber, createdAt } = this;
 
     return {
       id,

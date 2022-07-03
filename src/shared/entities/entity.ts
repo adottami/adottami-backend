@@ -1,10 +1,15 @@
 import { v4 as uuid } from 'uuid';
 
-abstract class Entity {
-  readonly id?: string;
-  readonly createdAt?: Date;
+export interface EntityProps {
+  id?: string;
+  createdAt?: Date;
+}
 
-  constructor({ id, createdAt }: Entity) {
+abstract class Entity {
+  readonly id: string;
+  readonly createdAt: Date;
+
+  constructor({ id, createdAt }: EntityProps) {
     this.id = id || uuid();
     this.createdAt = createdAt || new Date();
   }
