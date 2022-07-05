@@ -30,7 +30,7 @@ describe('Create user controller', () => {
     expect(response.body).toHaveProperty('createdAt');
     expect(response.body.name).toBe(userData.name);
     expect(response.body.email).toBe(userData.email);
-    expect(response.body.password).not.toBe(userData.password);
+    expect(response.body).not.toHaveProperty('password');
     expect(response.body.phoneNumber).toBe(userData.phoneNumber);
   });
 
