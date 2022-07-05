@@ -12,6 +12,7 @@ interface CreateUserRequest {
   password: string;
   phoneNumber: string;
 }
+
 @injectable()
 class CreateUserUseCase implements UseCaseService<CreateUserRequest, User> {
   constructor(
