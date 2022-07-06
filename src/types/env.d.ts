@@ -5,5 +5,6 @@ declare namespace NodeJS {
     readonly NODE_ENV?: Mode;
     readonly PORT: string;
     readonly ALLOWED_CORS_ORIGINS?: string;
+    readonly JWT_SECRET: string;
   }
 }
