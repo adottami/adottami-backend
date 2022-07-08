@@ -1,7 +1,5 @@
 import { TokenExpiredError } from 'jsonwebtoken';
 
-import HTTPResponse from '@/shared/infra/http/models/http-response';
-
 import TokenProvider from '../../token-provider';
 import JsonWebTokenProvider from '../json-web-token-provider';
 
