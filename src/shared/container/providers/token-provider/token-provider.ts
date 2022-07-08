@@ -1,8 +1,11 @@
 export interface TokenOptions {
-  subject?: string;
-  expiresIn?: string;
+  subject: string;
+  expiresIn: string;
 }
 
-export interface TokenProvider {
+interface TokenProvider {
   generate(options: TokenOptions): string;
+  verify(token: string): string;
 }
+
+export default TokenProvider;
