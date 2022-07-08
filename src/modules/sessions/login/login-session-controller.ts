@@ -17,7 +17,10 @@ class LoginSessionController implements UseCaseController {
       password,
     });
 
-    return new HTTPResponse(response).created({ user: user.toJson(), accesToken: token });
+    return new HTTPResponse(response).created({
+      user: user.toJson(),
+      accessToken: token,
+    });
   }
 }
 
