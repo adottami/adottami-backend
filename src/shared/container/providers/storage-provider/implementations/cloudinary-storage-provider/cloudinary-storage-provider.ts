@@ -4,11 +4,9 @@ import globalConfig from '@/config/global-config/global-config';
 import { CloudinaryConfig } from '@/config/global-config/types';
 
 import StorageProvider, { FileStorageResult, SaveOptions } from '../../storage-provider';
-import AbstractStorageProvider from '../abstract-storage-provider';
 
-class CloudinaryStorageProvider extends AbstractStorageProvider implements StorageProvider {
+class CloudinaryStorageProvider implements StorageProvider {
   constructor() {
-    super();
     const cloudinaryConfig = this.getExistingCloudinaryConfig();
     this.configureCloudinary(cloudinaryConfig);
   }

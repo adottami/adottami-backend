@@ -1,5 +1,5 @@
 import path from 'path';
 
-import { PROJECT_ROOT_DIRECTORY } from '@/config/global-config/constants';
+import { TEMPORARY_FOLDER } from '@/config/global-config/constants';
 
-export const LOCAL_STORAGE_FOLDER = path.join(PROJECT_ROOT_DIRECTORY, 'tmp', 'uploads');
+export const LOCAL_STORAGE_FOLDER = path.join(TEMPORARY_FOLDER, 'storage');

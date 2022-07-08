@@ -2,10 +2,9 @@ import fs from 'fs-extra';
 import path from 'path';
 
 import StorageProvider, { FileStorageResult } from '../../storage-provider';
-import AbstractStorageProvider from '../abstract-storage-provider';
 import { LOCAL_STORAGE_FOLDER } from './constants';
 
-class LocalStorageProvider extends AbstractStorageProvider implements StorageProvider {
+class LocalStorageProvider implements StorageProvider {
   async save(filePath: string): Promise<FileStorageResult> {
     const fileId = this.getFileId(filePath);
     const absoluteFilePath = this.getAbsoluteFilePath(fileId);
