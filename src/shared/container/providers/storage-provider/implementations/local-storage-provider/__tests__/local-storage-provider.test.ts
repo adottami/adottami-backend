@@ -12,6 +12,10 @@ describe('Local storage provider', () => {
   const filePath = path.join(TEMPORARY_FOLDER, fileId);
   const savedFilePath = path.join(LOCAL_STORAGE_FOLDER, fileId);
 
+  beforeAll(async () => {
+    await fs.mkdir(TEMPORARY_FOLDER, { recursive: true });
+  });
+
   beforeEach(async () => {
     await fs.writeFile(filePath, fileData);
   });
