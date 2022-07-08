@@ -9,11 +9,17 @@ import CloudinaryStorageProvider from './providers/storage-provider/implementati
 import LocalStorageProvider from './providers/storage-provider/implementations/local-storage-provider/local-storage-provider';
 import StorageProvider from './providers/storage-provider/storage-provider';
 
-function getActiveStorageProvider(): ClassType<StorageProvider> {
-  return globalConfig.mode() === 'production' ? CloudinaryStorageProvider : LocalStorageProvider;
+function prepareCloudinaryStorageProvider(): ClassType<CloudinaryStorageProvider> {
+  const cloudinaryConfig = CloudinaryStorageProvider.getGlobalCloudinaryConfig();
+  container.register(CloudinaryStorageProvider.CLOUDINARY_CONFIG_INJECT_KEY, { useValue: cloudinaryConfig });
+  return CloudinaryStorageProvider;
+}
+
+function prepareActiveStorageProvider(): ClassType<StorageProvider> {
+  return globalConfig.mode() === 'production' ? prepareCloudinaryStorageProvider() : LocalStorageProvider;
 }
 
 export function registerProviderSingletons() {
   container.registerSingleton<HashProvider>('HashProvider', BcryptHashProvider);
-  container.registerSingleton<StorageProvider>('StorageProvider', getActiveStorageProvider());
+  container.registerSingleton<StorageProvider>('StorageProvider', prepareActiveStorageProvider());
 }

@@ -1,16 +1,23 @@
 import { v2 as cloudinary } from 'cloudinary';
+import { inject, singleton } from 'tsyringe';
 
 import globalConfig from '@/config/global-config/global-config';
 import { CloudinaryConfig } from '@/config/global-config/types';
 
 import StorageProvider, { FileStorageResult, SaveOptions } from '../../storage-provider';
 
+@singleton()
 class CloudinaryStorageProvider implements StorageProvider {
-  constructor(cloudinaryConfig?: CloudinaryConfig) {
-    this.configureCloudinary(cloudinaryConfig ?? this.getGlobalCloudinaryConfig());
+  static readonly CLOUDINARY_CONFIG_INJECT_KEY = 'CloudinaryConfig';
+
+  constructor(
+    @inject(CloudinaryStorageProvider.CLOUDINARY_CONFIG_INJECT_KEY)
+    cloudinaryConfig: CloudinaryConfig,
+  ) {
+    this.configureCloudinary(cloudinaryConfig);
   }
 
-  private getGlobalCloudinaryConfig(): CloudinaryConfig {
+  static getGlobalCloudinaryConfig(): CloudinaryConfig {
     const cloudinaryConfig = globalConfig.cloudinary();
     if (cloudinaryConfig === null) {
       throw new Error('Could not initialize a cloudinary storage provider: cloudinary config not available.');
@@ -18,7 +25,7 @@ class CloudinaryStorageProvider implements StorageProvider {
     return cloudinaryConfig;
   }
 
-  private configureCloudinary(cloudinaryConfig: CloudinaryConfig): void {
+  private configureCloudinary(cloudinaryConfig: CloudinaryConfig) {
     cloudinary.config({
       cloud_name: cloudinaryConfig.cloudName,
       api_key: cloudinaryConfig.apiKey,
