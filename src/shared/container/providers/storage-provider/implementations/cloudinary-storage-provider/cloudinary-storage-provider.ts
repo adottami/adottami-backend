@@ -6,12 +6,11 @@ import { CloudinaryConfig } from '@/config/global-config/types';
 import StorageProvider, { FileStorageResult, SaveOptions } from '../../storage-provider';
 
 class CloudinaryStorageProvider implements StorageProvider {
-  constructor() {
-    const cloudinaryConfig = this.getExistingCloudinaryConfig();
-    this.configureCloudinary(cloudinaryConfig);
+  constructor(cloudinaryConfig?: CloudinaryConfig) {
+    this.configureCloudinary(cloudinaryConfig ?? this.getGlobalCloudinaryConfig());
   }
 
-  private getExistingCloudinaryConfig(): CloudinaryConfig {
+  private getGlobalCloudinaryConfig(): CloudinaryConfig {
     const cloudinaryConfig = globalConfig.cloudinary();
     if (cloudinaryConfig === null) {
       throw new Error('Could not initialize a cloudinary storage provider: cloudinary config not available.');

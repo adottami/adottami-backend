@@ -32,7 +32,7 @@ describe('Global config', () => {
       expect(globalConfig.cloudinary()).toEqual({ cloudName, apiKey, apiSecret });
     });
 
-    it('should not load cloudinary config if not present', () => {
+    it('should not load cloudinary config if not fully present', () => {
       delete process.env.CLOUDINARY_CLOUD_NAME;
       process.env.CLOUDINARY_API_KEY = apiKey;
       process.env.CLOUDINARY_API_SECRET = apiSecret;
