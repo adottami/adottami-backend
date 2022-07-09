@@ -13,6 +13,7 @@ const PRISMA_BINARY_PATH = path.join(PROJECT_ROOT_DIRECTORY, 'node_modules', '.b
 class PrismaTestEnvironment extends NodeEnvironment {
   private client: PrismaClient;
   private schemaName: string;
+  private initialDatabaseURL: string;
   private databaseURL: string;
 
   constructor(config: JestEnvironmentConfig, context: EnvironmentContext) {
@@ -22,7 +23,8 @@ class PrismaTestEnvironment extends NodeEnvironment {
 
     this.client = new PrismaClient();
     this.schemaName = this.generateSchemaName(context);
-    this.databaseURL = `${process.env.DATABASE_URL}?schema=${this.schemaName}`;
+    this.initialDatabaseURL = process.env.DATABASE_URL;
+    this.databaseURL = `${this.initialDatabaseURL}?schema=${this.schemaName}`;
   }
 
   private loadEnvironmentVariables() {
@@ -31,18 +33,18 @@ class PrismaTestEnvironment extends NodeEnvironment {
   }
 
   private generateSchemaName(context: EnvironmentContext): string {
-    return crypto.createHash('shake256', { outputLength: 16 }).update(context.testPath).digest('base64');
+    return crypto.createHash('shake256', { outputLength: 30 }).update(context.testPath).digest('hex');
   }
 
   async setup() {
     process.env.DATABASE_URL = this.databaseURL;
     this.global.process.env.DATABASE_URL = this.databaseURL;
 
-    await this.applyPrismaSchemaToDatabase();
+    await this.applySchemaToDatabase();
     await super.setup();
   }
 
-  private async applyPrismaSchemaToDatabase() {
+  private async applySchemaToDatabase() {
     await new Promise<void>((resolve, reject) => {
       childProcess.exec(`${PRISMA_BINARY_PATH} db push --skip-generate`, (error) => {
         if (error) reject(error);
@@ -52,8 +54,12 @@ class PrismaTestEnvironment extends NodeEnvironment {
   }
 
   async teardown() {
-    await this.client.$queryRaw`DROP SCHEMA IF EXISTS "${this.schemaName}" CASCADE`;
+    process.env.DATABASE_URL = this.initialDatabaseURL;
+    this.global.process.env.DATABASE_URL = this.initialDatabaseURL;
+
+    await this.client.$queryRawUnsafe(`DROP SCHEMA IF EXISTS "${this.schemaName}" CASCADE`);
     await this.client.$disconnect();
+    await super.teardown();
   }
 }
 
