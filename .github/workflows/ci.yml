@@ -53,7 +53,7 @@ jobs:
         run: yarn concurrently 'yarn types:check' 'yarn lint . --max-warnings=0' 'yarn style:check .'
 
       - name: Set up database
-        run: yarn prisma migrate dev
+        run: yarn prisma migrate dev --skip-generate
 
       - name: Run tests
         run: yarn test:ci

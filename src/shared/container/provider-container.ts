@@ -8,6 +8,8 @@ import { ClassType } from '@/types/utils';
 import CloudinaryStorageProvider from './providers/storage-provider/implementations/cloudinary-storage-provider/cloudinary-storage-provider';
 import LocalStorageProvider from './providers/storage-provider/implementations/local-storage-provider/local-storage-provider';
 import StorageProvider from './providers/storage-provider/storage-provider';
+import JsonWebTokenProvider from './providers/token-provider/implementations/json-web-token-provider';
+import TokenProvider from './providers/token-provider/token-provider';
 
 function prepareCloudinaryStorageProvider(): ClassType<CloudinaryStorageProvider> {
   const cloudinaryConfig = CloudinaryStorageProvider.getGlobalCloudinaryConfig();
@@ -21,5 +23,6 @@ function prepareActiveStorageProvider(): ClassType<StorageProvider> {
 
 export function registerProviderSingletons() {
   container.registerSingleton<HashProvider>('HashProvider', BcryptHashProvider);
+  container.registerSingleton<TokenProvider>('TokenProvider', JsonWebTokenProvider);
   container.registerSingleton<StorageProvider>('StorageProvider', prepareActiveStorageProvider());
 }

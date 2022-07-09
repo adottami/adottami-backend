@@ -9,6 +9,7 @@ export class GlobalConfig {
   private _port: number;
   private _allowedCORSOrigins: string[];
   private _cloudinary: CloudinaryConfig | null;
+  private _jwtSecret: string;
 
   constructor() {
     this._mode = process.env.NODE_ENV ?? 'development';
@@ -18,6 +19,7 @@ export class GlobalConfig {
     this._port = Number(process.env.PORT);
     this._allowedCORSOrigins = process.env.ALLOWED_CORS_ORIGINS?.split(',') ?? ['*'];
     this._cloudinary = this.readCloudinaryConfig();
+    this._jwtSecret = process.env.JWT_SECRET;
   }
 
   mode(): Mode {
@@ -34,6 +36,10 @@ export class GlobalConfig {
 
   cloudinary(): CloudinaryConfig | null {
     return this._cloudinary;
+  }
+
+  jwtSecret(): string {
+    return this._jwtSecret;
   }
 
   private loadEnvironmentVariables(mode: Mode) {
