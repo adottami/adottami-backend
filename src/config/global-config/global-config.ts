@@ -8,12 +8,14 @@ export class GlobalConfig {
   private _mode: Mode;
   private _port: number;
   private _allowedCORSOrigins: string[];
+  private _jwtSecret: string;
 
   constructor() {
     this._mode = process.env.NODE_ENV ?? 'development';
     this.loadEnvironmentVariables(this.mode());
     this._port = Number(process.env.PORT);
     this._allowedCORSOrigins = process.env.ALLOWED_CORS_ORIGINS?.split(',') ?? ['*'];
+    this._jwtSecret = process.env.JWT_SECRET;
   }
 
   mode(): Mode {
@@ -26,6 +28,10 @@ export class GlobalConfig {
 
   allowedCORSOrigins(): string[] {
     return this._allowedCORSOrigins;
+  }
+
+  jwtSecret(): string {
+    return this._jwtSecret;
   }
 
   private loadEnvironmentVariables(mode: Mode) {
