@@ -27,6 +27,7 @@
     "prettier/prettier": "warn",
 
     "indent": "off",
+    "no-new": "off",
     "no-useless-constructor": "off",
     "func-style": ["error", "declaration", { "allowArrowFunctions": false }],
     "comma-dangle": ["warn", "always-multiline"],
