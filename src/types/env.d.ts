@@ -3,6 +3,7 @@ declare namespace NodeJS {
 
   interface ProcessEnv {
     NODE_ENV?: Mode;
+    DATABASE_URL: string;
     PORT: string;
     ALLOWED_CORS_ORIGINS?: string;
 
