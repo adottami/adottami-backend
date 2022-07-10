@@ -17,6 +17,14 @@ class UserRepositoryMock implements UserRepository {
 
     return user || null;
   }
+
+  async findById(id: string): Promise<User | null> {
+    const user = this.users.find((user) => user.id === id);
+
+    return user || null;
+  }
+
+  async updatePassword(id: string, newPassword: string): Promise<void> {}
 }
 
 export default UserRepositoryMock;
