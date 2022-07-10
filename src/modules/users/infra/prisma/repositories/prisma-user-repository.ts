@@ -33,7 +33,7 @@ class PrismaUserRepository implements UserRepository {
   }
 
   async updatePassword(id: string, newPassword: string): Promise<void> {
-    const user = await prisma.user.update({
+    await prisma.user.update({
       where: { id },
       data: { password: newPassword },
     });

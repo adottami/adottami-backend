@@ -8,13 +8,13 @@ import UpdateUserPasswordUseCase from './update-user-password-case';
 
 class UpdateUserPasswordController implements UseCaseController {
   handle = async (request: Request, response: Response): Promise<Response> => {
-    const { userId } = request.params;
+    const { id } = request.params;
     const { currentPassword, newPassword } = request.body;
 
     const updateUserPasswordUseCase = container.resolve(UpdateUserPasswordUseCase);
 
     await updateUserPasswordUseCase.execute({
-      userId,
+      id,
       currentPassword,
       newPassword,
     });

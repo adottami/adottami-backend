@@ -6,7 +6,7 @@ import BadRequestHTTPError from '@/shared/infra/http/errors/bad-request-http-err
 import UseCaseService from '@/shared/use-cases/use-case-service';
 
 interface UpdateUserPasswordRequest {
-  userId: string;
+  id: string;
   currentPassword: string;
   newPassword: string;
 }
@@ -21,8 +21,8 @@ class UpdateUserPasswordUseCase implements UseCaseService<UpdateUserPasswordRequ
     private hashProvider: HashProvider,
   ) {}
 
-  async execute({ userId, currentPassword, newPassword }: UpdateUserPasswordRequest): Promise<void> {
-    const user = await this.userRepository.findById(userId);
+  async execute({ id, currentPassword, newPassword }: UpdateUserPasswordRequest): Promise<void> {
+    const user = await this.userRepository.findById(id);
 
     if (!user) {
       throw new BadRequestHTTPError('User does not exists');
@@ -34,7 +34,9 @@ class UpdateUserPasswordUseCase implements UseCaseService<UpdateUserPasswordRequ
       throw new BadRequestHTTPError('Current password is invalid');
     }
 
-    await this.userRepository.updatePassword(userId, newPassword);
+    const passwordHash = await this.hashProvider.generate(newPassword);
+
+    await this.userRepository.updatePassword(id, passwordHash);
   }
 }
 
