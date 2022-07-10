@@ -1,7 +1,7 @@
 import { inject, injectable } from 'tsyringe';
 
-import UserRepository from '@/modules/repositories/user-repository';
 import User from '@/modules/users/entities/user';
+import UserRepository from '@/modules/users/repositories/user-repository';
 import BadRequestHTTPError from '@/shared/infra/http/errors/bad-request-http-error';
 import NotFoundHTTPError from '@/shared/infra/http/errors/not-found-http-error';
 import UseCaseService from '@/shared/use-cases/use-case-service';
