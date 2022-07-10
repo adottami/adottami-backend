@@ -1,8 +1,6 @@
 import User from '@/modules/users/entities/user';
 import UserRepositoryMock from '@/modules/users/repositories/mocks/user-repository-mock';
 import UserRepository from '@/modules/users/repositories/user-repository';
-import HashProvider from '@/shared/container/providers/hash-provider/hash-provider';
-import HashProviderMock from '@/shared/container/providers/hash-provider/mocks/hash-provider-mock';
 import BadRequestHTTPError from '@/shared/infra/http/errors/bad-request-http-error';
 import NotFoundHTTPError from '@/shared/infra/http/errors/not-found-http-error';
 
@@ -10,12 +8,10 @@ import UpdateUserUseCase from '../update-user-use-case';
 
 describe('Update user use case', () => {
   let userRepository: UserRepository;
-  let hashProvider: HashProvider;
   let useCase: UpdateUserUseCase;
 
   beforeEach(() => {
     userRepository = new UserRepositoryMock();
-    hashProvider = new HashProviderMock();
     useCase = new UpdateUserUseCase(userRepository);
   });
 
