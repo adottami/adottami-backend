@@ -39,7 +39,7 @@ model Publication {
 
   images Image[]
 
-  characterists Characterist[]
+  characterists Characteristic[]
 }
 
 model Image {
@@ -51,7 +51,7 @@ model Image {
   publicationId String
 }
 
-model Characterist {
+model Characteristic {
   id        String   @id @default(uuid())
   name      String
   createdAt DateTime @default(now())
