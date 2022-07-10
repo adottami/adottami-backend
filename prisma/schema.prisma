@@ -39,7 +39,7 @@ model Publication {
 
   images Image[]
 
-  characterists Characteristic[]
+  characteristics Characteristic[]
 }
 
 model Image {
@@ -53,7 +53,7 @@ model Image {
 
 model Characteristic {
   id        String   @id @default(uuid())
-  name      String
+  name      String   @unique
   createdAt DateTime @default(now())
 
   publication   Publication @relation(fields: [publicationId], references: [id])
