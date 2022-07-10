@@ -1,5 +1,5 @@
-import UserRepository from '@/modules/repositories/user-repository';
 import User from '@/modules/users/entities/user';
+import UserRepository from '@/modules/users/repositories/user-repository';
 
 class UserRepositoryMock implements UserRepository {
   constructor(private users: User[] = []) {}
@@ -14,6 +14,12 @@ class UserRepositoryMock implements UserRepository {
 
   async findByEmail(email: string): Promise<User | null> {
     const user = this.users.find((user) => user.email === email);
+
+    return user || null;
+  }
+
+  async findById(id: string): Promise<User | null> {
+    const user = this.users.find((user) => user.id === id);
 
     return user || null;
   }

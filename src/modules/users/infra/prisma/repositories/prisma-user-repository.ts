@@ -1,5 +1,5 @@
-import UserRepository from '@/modules/repositories/user-repository';
 import User from '@/modules/users/entities/user';
+import UserRepository from '@/modules/users/repositories/user-repository';
 import prisma from '@/shared/infra/prisma/prisma-client';
 
 class PrismaUserRepository implements UserRepository {
@@ -19,6 +19,14 @@ class PrismaUserRepository implements UserRepository {
   async findByEmail(email: string): Promise<User | null> {
     const user = await prisma.user.findUnique({
       where: { email },
+    });
+
+    return user ? User.create(user) : null;
+  }
+
+  async findById(id: string): Promise<User | null> {
+    const user = await prisma.user.findUnique({
+      where: { id },
     });
 
     return user ? User.create(user) : null;
