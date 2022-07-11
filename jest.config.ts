@@ -30,7 +30,7 @@ export default {
 
   testEnvironment: 'node',
   testRegex: '.*\\.test\\.ts$',
-  testPathIgnorePatterns: ['node_modules', 'public', '.next'],
+  testPathIgnorePatterns: ['<rootDir>/node_modules', '<rootDir>/build'],
 
   transformIgnorePatterns: ['node_modules/.+\\.(ts|tsx)$'],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],
