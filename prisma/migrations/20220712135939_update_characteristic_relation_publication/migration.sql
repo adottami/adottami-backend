@@ -1,17 +1,23 @@
 /*
   Warnings:
 
-  - You are about to drop the `CharacteristicsOnPublications` table. If the table is not empty, all the data it contains will be lost.
+  - You are about to drop the `Characterist` table. If the table is not empty, all the data it contains will be lost.
 
 */
 -- DropForeignKey
-ALTER TABLE "CharacteristicsOnPublications" DROP CONSTRAINT "CharacteristicsOnPublications_characteristicId_fkey";
-
--- DropForeignKey
-ALTER TABLE "CharacteristicsOnPublications" DROP CONSTRAINT "CharacteristicsOnPublications_publicationId_fkey";
+ALTER TABLE "Characterist" DROP CONSTRAINT "Characterist_publicationId_fkey";
 
 -- DropTable
-DROP TABLE "CharacteristicsOnPublications";
+DROP TABLE "Characterist";
+
+-- CreateTable
+CREATE TABLE "Characteristic" (
+    "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "Characteristic_pkey" PRIMARY KEY ("id")
+);
 
 -- CreateTable
 CREATE TABLE "_CharacteristicToPublication" (
