@@ -23,6 +23,18 @@ class UserRepositoryMock implements UserRepository {
 
     return user || null;
   }
+
+  async update(id: string, { name, email, phoneNumber }: User): Promise<User> {
+    const userIndex = this.users.findIndex((user) => user.id === id);
+
+    Object.assign(this.users[userIndex], {
+      name,
+      email,
+      phoneNumber,
+    });
+
+    return this.users[userIndex];
+  }
 }
 
 export default UserRepositoryMock;
