@@ -36,7 +36,7 @@ This project runs on [Node.js v16](https://nodejs.org/) and uses [Yarn v1](https
 3. Apply the current schema (if the database is not up-to-date):
 
    ```bash
-   $ yarn migrate:dev
+   $ yarn db:migrate
    ```
 
 4. Start the server in development mode:
