@@ -10,6 +10,12 @@ class CharacteristicRepositoryMock implements CharacteristicRepository {
     return this.characteristics;
   }
 
+  async findById(id: string): Promise<Characteristic | null> {
+    const characteristic = this.characteristics.find((characteristic) => characteristic.id === id);
+
+    return characteristic || null;
+  }
+
   private seed(): Characteristic[] {
     return Characteristic.createMany([
       { id: '1', name: 'Brincalhão' },

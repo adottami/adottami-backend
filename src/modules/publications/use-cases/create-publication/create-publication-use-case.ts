@@ -7,6 +7,8 @@ import UserRepository from '@/modules/users/repositories/user-repository';
 import BadRequestHTTPError from '@/shared/infra/http/errors/bad-request-http-error';
 import UseCaseService from '@/shared/use-cases/use-case-service';
 
+import CharacteristicRepository from '../../repositories/characteristic-repository';
+
 export {};
 
 interface CreatePublicationRequest {
@@ -34,6 +36,9 @@ class CreatePublicationUseCase implements UseCaseService<CreatePublicationReques
 
     @inject('UserRepository')
     private userRepository: UserRepository,
+
+    @inject('CharacteristicRepository')
+    private characteristicRepository: CharacteristicRepository,
   ) {}
 
   async execute({
@@ -56,6 +61,15 @@ class CreatePublicationUseCase implements UseCaseService<CreatePublicationReques
 
     if (!author) {
       throw new BadRequestHTTPError('User does not exists');
+    }
+
+    for (let index = 0; index < characteristics.length; index++) {
+      const characteristic = characteristics[index];
+      const testCharacteristic = await this.characteristicRepository.findById(characteristic.id);
+
+      if (!testCharacteristic) {
+        throw new BadRequestHTTPError(`Characteristic with id ${characteristic.id} does not exists`);
+      }
     }
 
     const publicationData = Publication.create({
