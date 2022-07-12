@@ -18,7 +18,7 @@ class Characteristic extends Entity {
     return characteristic;
   }
 
-  static createMany(characteristicsProps: CharacteristicProps[]) {
+  static createMany(characteristicsProps: CharacteristicProps[]): Characteristic[] {
     const characteristics = [];
 
     for (const characteristicData of characteristicsProps) {

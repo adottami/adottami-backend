@@ -1,6 +1,8 @@
 import User from '@/modules/users/entities/user';
 import Entity, { EntityProps } from '@/shared/entities/entity';
 
+import Characteristic from './characteristic';
+
 interface PublicationProps extends EntityProps {
   author: User;
   name: string;
@@ -15,7 +17,7 @@ interface PublicationProps extends EntityProps {
   state: string;
   isArchived: boolean;
   hidePhoneNumber: boolean;
-  characteristics: Array<{ id: string }>;
+  characteristics: Characteristic[];
 }
 
 class Publication extends Entity {
@@ -32,7 +34,7 @@ class Publication extends Entity {
   readonly state: string;
   readonly isArchived: boolean;
   readonly hidePhoneNumber: boolean;
-  readonly characteristics: Array<{ id: string }>;
+  readonly characteristics: Characteristic[];
 
   private constructor({
     id,
