@@ -6,8 +6,6 @@ import UserRepository from '@/modules/users/repositories/user-repository';
 import BadRequestHTTPError from '@/shared/infra/http/errors/bad-request-http-error';
 import UseCaseService from '@/shared/use-cases/use-case-service';
 
-import Characteristic from '../../entities/characteristic';
-
 interface CreatePublicationRequest {
   authorId: string;
   name: string;
@@ -22,7 +20,7 @@ interface CreatePublicationRequest {
   state: string;
   isArchived: boolean;
   hidePhoneNumber: boolean;
-  characteristics: Characteristic[];
+  characteristics: Array<{ id: string }>;
 }
 
 @injectable()
