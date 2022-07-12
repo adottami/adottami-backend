@@ -60,7 +60,7 @@ class CreatePublicationUseCase implements UseCaseService<CreatePublicationReques
     const author = await this.userRepository.findById(authorId);
 
     if (!author) {
-      throw new BadRequestHTTPError('User does not exists');
+      throw new BadRequestHTTPError('Author does not exists');
     }
 
     for (let index = 0; index < characteristics.length; index++) {
