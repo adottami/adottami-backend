@@ -2,17 +2,14 @@ import Entity, { EntityProps } from '@/shared/entities/entity';
 
 interface CharacteristicProps extends EntityProps {
   name: string;
-  publicationId: string;
 }
 
 class Characteristic extends Entity {
   readonly name: string;
-  readonly publicationId: string;
 
-  private constructor({ id, name, publicationId, createdAt }: CharacteristicProps) {
-    super({ id, createdAt });
+  private constructor({ id, name }: CharacteristicProps) {
+    super({ id });
     this.name = name;
-    this.publicationId = publicationId;
   }
 
   static create(characteristicProps: CharacteristicProps) {
@@ -21,13 +18,22 @@ class Characteristic extends Entity {
     return characteristic;
   }
 
+  static createMany(characteristicsProps: CharacteristicProps[]) {
+    const characteristics = [];
+
+    for (const characteristicData of characteristicsProps) {
+      characteristics.push(this.create(characteristicData));
+    }
+
+    return characteristics;
+  }
+
   toJson() {
-    const { id, name, createdAt } = this;
+    const { id, name } = this;
 
     return {
       id,
       name,
-      createdAt,
     };
   }
 }

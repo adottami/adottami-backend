@@ -3,6 +3,9 @@
   "version": "0.0.0",
   "repository": "git@github.com:es-2021-2-grupo-2/adottami-backend.git",
   "private": true,
+  "prisma": {
+    "seed": "ts-node --transpile-only prisma/seed.ts"
+  },
   "scripts": {
     "dev": "concurrently \"yarn build:generate --watch\" \"nodemon\"",
     "start": "node build/shared/infra/http/server.js",
@@ -17,7 +20,9 @@
     "test:ci": "yarn test --maxWorkers=1",
     "types:check": "tsc --pretty --noEmit",
     "db:push": "dotenv -e .env.development -- yarn prisma db push",
-    "migrate:dev": "dotenv -e .env.development -- yarn prisma migrate dev",
+    "db:seed": "dotenv -e .env.development -- yarn prisma db seed",
+    "db:migrate": "dotenv -e .env.development -- yarn prisma migrate dev",
+    "prisma:studio": "dotenv -e .env.development -- yarn prisma studio",
     "db:up": "docker-compose up -d",
     "db:stop": "docker-compose stop",
     "db:down": "docker-compose down",
