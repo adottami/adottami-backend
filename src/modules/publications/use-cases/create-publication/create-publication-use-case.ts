@@ -1,10 +1,13 @@
 import { injectable, inject } from 'tsyringe';
 
+import Characteristic from '@/modules/publications/entities/characteristic';
 import Publication from '@/modules/publications/entities/publication';
 import PublicationRepository from '@/modules/repositories/publication-repository';
 import UserRepository from '@/modules/users/repositories/user-repository';
 import BadRequestHTTPError from '@/shared/infra/http/errors/bad-request-http-error';
 import UseCaseService from '@/shared/use-cases/use-case-service';
+
+export {};
 
 interface CreatePublicationRequest {
   authorId: string;
@@ -20,7 +23,7 @@ interface CreatePublicationRequest {
   state: string;
   isArchived: boolean;
   hidePhoneNumber: boolean;
-  characteristics: Array<{ id: string }>;
+  characteristics: Characteristic[];
 }
 
 @injectable()

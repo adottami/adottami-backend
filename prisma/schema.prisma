@@ -39,7 +39,7 @@ model Publication {
 
   images Image[]
 
-  characteristics CharacteristicsOnPublications[]
+  characteristics Characteristic[]
 }
 
 model Image {
@@ -52,19 +52,8 @@ model Image {
 }
 
 model Characteristic {
-  id        String   @id @default(uuid())
-  name      String
-  createdAt DateTime @default(now())
-
-  publications CharacteristicsOnPublications[]
-}
-
-model CharacteristicsOnPublications {
-  publication   Publication @relation(fields: [publicationId], references: [id])
-  publicationId String
-
-  characteristic   Characteristic @relation(fields: [characteristicId], references: [id])
-  characteristicId String
-
-  @@id([publicationId, characteristicId])
+  id           String        @id @default(uuid())
+  name         String
+  createdAt    DateTime      @default(now())
+  publications Publication[]
 }

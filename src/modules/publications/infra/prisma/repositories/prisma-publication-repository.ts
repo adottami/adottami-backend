@@ -38,7 +38,9 @@ class PrismaPublicationRepository implements PublicationRepository {
         state,
         isArchived,
         hidePhoneNumber,
-        characteristics: {},
+        characteristics: {
+          connect: characteristics,
+        },
       },
       include: {
         author: true,
@@ -46,36 +48,10 @@ class PrismaPublicationRepository implements PublicationRepository {
       },
     });
 
-    await prisma.characteristicsOnPublications.createMany({
-      data: characteristics.map((characteristic) => ({
-        characteristicId: characteristic.id,
-        publicationId: publication.id,
-      })),
-    });
-
-    const publicationCharacteristics = await prisma.publication.findUnique({
-      where: {
-        id: publication.id,
-      },
-      include: {
-        author: true,
-        characteristics: {
-          include: {
-            characteristic: true,
-          },
-        },
-      },
-    });
-
     const author = User.create(publication.author);
+    const publicationCharacteristics = Characteristic.createMany(publication.characteristics);
 
-    return Publication.create({
-      ...publicationCharacteristics,
-      author,
-      characteristics: Characteristic.createMany(
-        publicationCharacteristics.characteristics.map((characteristic) => characteristic.characteristic),
-      ),
-    });
+    return Publication.create({ ...publication, author, characteristics: publicationCharacteristics });
   }
 }
 

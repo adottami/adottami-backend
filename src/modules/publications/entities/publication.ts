@@ -99,7 +99,6 @@ class Publication extends Entity {
 
     return {
       id,
-      author: author.toJson(),
       name,
       description,
       category,
@@ -113,6 +112,7 @@ class Publication extends Entity {
       isArchived,
       hidePhoneNumber,
       characteristics: characteristics.map((characteristic) => characteristic.toJson()),
+      author: author.toJson(),
       createdAt,
     };
   }
