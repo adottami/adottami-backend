@@ -1,5 +1,5 @@
-import UserRepository from '@/modules/repositories/user-repository';
 import User from '@/modules/users/entities/user';
+import UserRepository from '@/modules/users/repositories/user-repository';
 import prisma from '@/shared/infra/prisma/prisma-client';
 
 class PrismaUserRepository implements UserRepository {
@@ -37,6 +37,19 @@ class PrismaUserRepository implements UserRepository {
       where: { id },
       data: { password: newPassword },
     });
+  }
+
+  async update(id: string, { name, email, phoneNumber }: User): Promise<User> {
+    const user = await prisma.user.update({
+      where: { id },
+      data: {
+        name,
+        email,
+        phoneNumber,
+      },
+    });
+
+    return User.create(user);
   }
 }
 

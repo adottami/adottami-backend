@@ -1,6 +1,6 @@
 import { inject, injectable } from 'tsyringe';
 
-import UserRepository from '@/modules/repositories/user-repository';
+import UserRepository from '@/modules/users/repositories/user-repository';
 import HashProvider from '@/shared/container/providers/hash-provider/hash-provider';
 import TokenProvider from '@/shared/container/providers/token-provider/token-provider';
 import BadRequestHTTPError from '@/shared/infra/http/errors/bad-request-http-error';

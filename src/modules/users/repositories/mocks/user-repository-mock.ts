@@ -1,5 +1,5 @@
-import UserRepository from '@/modules/repositories/user-repository';
 import User from '@/modules/users/entities/user';
+import UserRepository from '@/modules/users/repositories/user-repository';
 
 class UserRepositoryMock implements UserRepository {
   constructor(private users: User[] = []) {}
@@ -30,6 +30,18 @@ class UserRepositoryMock implements UserRepository {
     const newUser = User.create({ ...this.users[userIndex], password: newPassword });
 
     this.users[userIndex] = newUser;
+  }
+
+  async update(id: string, { name, email, phoneNumber }: User): Promise<User> {
+    const userIndex = this.users.findIndex((user) => user.id === id);
+
+    Object.assign(this.users[userIndex], {
+      name,
+      email,
+      phoneNumber,
+    });
+
+    return this.users[userIndex];
   }
 }
 

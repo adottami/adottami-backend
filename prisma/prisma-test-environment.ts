@@ -41,12 +41,22 @@ class PrismaTestEnvironment extends NodeEnvironment {
     this.global.process.env.DATABASE_URL = this.databaseURL;
 
     await this.applySchemaToDatabase();
+    await this.loadSeed();
     await super.setup();
   }
 
   private async applySchemaToDatabase() {
     await new Promise<void>((resolve, reject) => {
       childProcess.exec(`${PRISMA_BINARY_PATH} db push --skip-generate`, (error) => {
+        if (error) reject(error);
+        else resolve();
+      });
+    });
+  }
+
+  private async loadSeed() {
+    await new Promise<void>((resolve, reject) => {
+      childProcess.exec(`${PRISMA_BINARY_PATH} db seed`, (error) => {
         if (error) reject(error);
         else resolve();
       });
