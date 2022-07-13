@@ -24,6 +24,14 @@ class UserRepositoryMock implements UserRepository {
     return user || null;
   }
 
+  async updatePassword(id: string, newPassword: string): Promise<void> {
+    const userIndex = this.users.findIndex((user) => user.id === id);
+
+    const newUser = User.create({ ...this.users[userIndex], password: newPassword });
+
+    this.users[userIndex] = newUser;
+  }
+
   async update(id: string, { name, email, phoneNumber }: User): Promise<User> {
     const userIndex = this.users.findIndex((user) => user.id === id);
 
