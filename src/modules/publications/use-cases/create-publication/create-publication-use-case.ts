@@ -9,8 +9,6 @@ import UseCaseService from '@/shared/use-cases/use-case-service';
 
 import CharacteristicRepository from '../../repositories/characteristic-repository';
 
-export {};
-
 interface CreatePublicationRequest {
   authorId: string;
   name: string;
