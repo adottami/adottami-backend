@@ -7,7 +7,6 @@ import BadRequestHTTPError from '@/shared/infra/http/errors/bad-request-http-err
 import UseCaseService from '@/shared/use-cases/use-case-service';
 
 import User from '../../../users/entities/user';
-import RefreshToken from '../../entities/refresh-token';
 import RefreshTokenRepository from '../../repositories/refresh-token-repository';
 
 interface LoginSessionRequest {
