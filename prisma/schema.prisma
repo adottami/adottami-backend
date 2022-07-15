@@ -16,6 +16,8 @@ model User {
   createdAt   DateTime @default(now())
 
   publications Publication[]
+
+  refreshToken RefreshToken[]
 }
 
 model Publication {
@@ -67,4 +69,11 @@ model CharacteristicsOnPublications {
   characteristicId String
 
   @@id([publicationId, characteristicId])
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  expiresIn DateTime
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
 }
