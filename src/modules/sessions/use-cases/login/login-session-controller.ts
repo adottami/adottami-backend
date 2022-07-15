@@ -12,7 +12,7 @@ class LoginSessionController implements UseCaseController {
 
     const loginSessionUseCase = container.resolve(LoginSessionUseCase);
 
-    const { user, token } = await loginSessionUseCase.execute({
+    const { user, token, refreshToken } = await loginSessionUseCase.execute({
       email,
       password,
     });
@@ -20,6 +20,7 @@ class LoginSessionController implements UseCaseController {
     return new HTTPResponse(response).created({
       user: user.toJson(),
       accessToken: token,
+      refreshToken,
     });
   }
 }
