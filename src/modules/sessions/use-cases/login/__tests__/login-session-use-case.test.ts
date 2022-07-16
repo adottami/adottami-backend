@@ -11,7 +11,7 @@ import BadRequestHTTPError from '@/shared/infra/http/errors/bad-request-http-err
 
 import LoginSessionUseCase from '../login-session-use-case';
 
-describe('Access token use case', () => {
+describe('Login session use case', () => {
   let userRepository: UserRepository;
   let refreshTokenRepository: RefreshTokenRepository;
   let hashProvider: HashProvider;
