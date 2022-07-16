@@ -17,7 +17,7 @@ model User {
 
   publications Publication[]
 
-  refreshToken RefreshToken[]
+  refreshTokens RefreshToken[]
 }
 
 model Publication {
