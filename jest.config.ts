@@ -15,6 +15,7 @@ export default {
   roots: ['<rootDir>'],
   setupFilesAfterEnv: ['<rootDir>/tests/test-setup.ts'],
   clearMocks: true,
+  testTimeout: 20000,
 
   coverageDirectory: 'coverage',
   coverageProvider: 'v8',
