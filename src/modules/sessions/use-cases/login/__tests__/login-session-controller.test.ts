@@ -34,13 +34,14 @@ describe('Login session controller', () => {
     expect(response.statusCode).toBe(HTTPResponse.STATUS_CODE.CREATED);
     expect(response.body).toHaveProperty('user');
     expect(response.body).toHaveProperty('accessToken');
+    expect(response.body).toHaveProperty('refreshToken');
     expect(response.body.user.email).toBe(loginData.email);
     expect(response.body.user).not.toHaveProperty('password');
     expect(response.body.user).toHaveProperty('name');
     expect(response.body.user).toHaveProperty('phoneNumber');
   });
 
-  it('shoud not be able to login user by incorrent email', async () => {
+  it('should not be able to login user by incorrect email', async () => {
     await request(app).post(URLCreateUser).send({
       name: 'Test name',
       email: 'test@test.com.br',
@@ -59,7 +60,7 @@ describe('Login session controller', () => {
     expect(response.body.message).toBe('Email or password incorrect');
   });
 
-  it('shoud not be able to login user by incorrent password', async () => {
+  it('should not be able to login user by incorrect password', async () => {
     await request(app).post(URLCreateUser).send({
       name: 'Test name',
       email: 'test@test.com.br',
