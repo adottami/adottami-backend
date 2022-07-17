@@ -6,7 +6,8 @@ import TokenProvider from '@/shared/container/providers/token-provider/token-pro
 import BadRequestHTTPError from '@/shared/infra/http/errors/bad-request-http-error';
 import UseCaseService from '@/shared/use-cases/use-case-service';
 
-import User from '../../users/entities/user';
+import User from '../../../users/entities/user';
+import RefreshTokenRepository from '../../repositories/refresh-token-repository';
 
 interface LoginSessionRequest {
   email: string;
@@ -16,6 +17,7 @@ interface LoginSessionRequest {
 interface LoginSessionResponse {
   user: User;
   token: string;
+  refreshToken: string;
 }
 
 @injectable()
@@ -23,6 +25,9 @@ class LoginSessionUseCase implements UseCaseService<LoginSessionRequest, LoginSe
   constructor(
     @inject('UserRepository')
     private userRepository: UserRepository,
+
+    @inject('RefreshTokenRepository')
+    private refreshTokenRepository: RefreshTokenRepository,
 
     @inject('HashProvider')
     private hashProvider: HashProvider,
@@ -49,7 +54,11 @@ class LoginSessionUseCase implements UseCaseService<LoginSessionRequest, LoginSe
       expiresIn: '15m',
     });
 
-    return { user, token };
+    const refreshTokenExpiration = new Date();
+    refreshTokenExpiration.setMonth(refreshTokenExpiration.getMonth() + 1);
+    const { id } = await this.refreshTokenRepository.create(user.id, refreshTokenExpiration);
+
+    return { user, token, refreshToken: id };
   }
 }
 
