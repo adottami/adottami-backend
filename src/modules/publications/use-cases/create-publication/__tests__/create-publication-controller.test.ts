@@ -62,7 +62,6 @@ describe('Create publication controller', () => {
         Authorization: `Bearer ${accessToken}`,
       });
 
-    console.log(response.body.characteristics);
     expect(response.statusCode).toBe(HTTPResponse.STATUS_CODE.CREATED);
     expect(response.body).toHaveProperty('id');
     expect(response.body).toHaveProperty('createdAt');
