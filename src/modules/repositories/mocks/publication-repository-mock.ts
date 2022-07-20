@@ -45,6 +45,12 @@ class PublicationRepositoryMock implements PublicationRepository {
 
     return publication;
   }
+
+  async findById(id: string): Promise<Publication | null> {
+    const publication = this.publications.find((publication) => publication.id === id);
+
+    return publication || null;
+  }
 }
 
 export default PublicationRepositoryMock;

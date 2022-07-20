@@ -53,6 +53,25 @@ class PrismaPublicationRepository implements PublicationRepository {
 
     return Publication.create({ ...publication, author, characteristics: publicationCharacteristics });
   }
+
+  async findById(id: string): Promise<Publication | null> {
+    const publication = await prisma.publication.findUnique({
+      where: { id },
+      include: {
+        author: true,
+        characteristics: true,
+      },
+    });
+
+    if (publication === null) {
+      return null;
+    }
+
+    const author = User.create(publication.author);
+    const publicationCharacteristics = Characteristic.createMany(publication.characteristics);
+
+    return Publication.create({ ...publication, author, characteristics: publicationCharacteristics });
+  }
 }
 
 export default PrismaPublicationRepository;
