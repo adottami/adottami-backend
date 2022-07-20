@@ -1,3 +1,5 @@
+import RefreshTokenRepositoryMock from '@/modules/sessions/repositories/mocks/refresh-token-repository-mock';
+import RefreshTokenRepository from '@/modules/sessions/repositories/refresh-token-repository';
 import User from '@/modules/users/entities/user';
 import UserRepositoryMock from '@/modules/users/repositories/mocks/user-repository-mock';
 import UserRepository from '@/modules/users/repositories/user-repository';
@@ -11,15 +13,18 @@ import LoginSessionUseCase from '../login-session-use-case';
 
 describe('Login session use case', () => {
   let userRepository: UserRepository;
+  let refreshTokenRepository: RefreshTokenRepository;
   let hashProvider: HashProvider;
   let tokenProvider: TokenProvider;
   let useCase: LoginSessionUseCase;
 
   beforeEach(async () => {
     userRepository = new UserRepositoryMock();
+    refreshTokenRepository = new RefreshTokenRepositoryMock();
+
     hashProvider = new HashProviderMock();
     tokenProvider = new TokenProviderMock();
-    useCase = new LoginSessionUseCase(userRepository, hashProvider, tokenProvider);
+    useCase = new LoginSessionUseCase(userRepository, refreshTokenRepository, hashProvider, tokenProvider);
 
     const password = '1234';
     const hashedPassword = await hashProvider.generate(password);
@@ -34,13 +39,13 @@ describe('Login session use case', () => {
     await userRepository.create(userData);
   });
 
-  it('should be able to generate a token for the user to login', async () => {
+  it('should be able to generate a token and a refresh token for the user to login', async () => {
     const loginData = {
       email: 'test@test.com.br',
       password: '1234',
     };
 
-    const { user, token } = await useCase.execute(loginData);
+    const { user, token, refreshToken } = await useCase.execute(loginData);
 
     expect(user).toHaveProperty('id');
     expect(user).toHaveProperty('name');
@@ -56,6 +61,12 @@ describe('Login session use case', () => {
     expect(token).not.toBe('');
     expect(token).toMatch(/./);
     expect(token.length).toBeGreaterThanOrEqual(1);
+
+    expect(refreshToken).not.toBeNaN();
+    expect(refreshToken).not.toBeNull();
+    expect(refreshToken).not.toBeUndefined();
+    expect(refreshToken).not.toBe('');
+    expect(refreshToken.length).toBeGreaterThanOrEqual(1);
   });
 
   it('should not be able to login without a created account', async () => {
