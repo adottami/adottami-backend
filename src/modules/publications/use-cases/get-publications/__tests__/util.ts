@@ -5,7 +5,7 @@ export function getNameNumberList(publications: Publication[]) {
 }
 
 export function getNumPublications(perPage: number, page: number): number[] {
-  return [...Array(perPage * page).keys()].splice(perPage * (page - 1), perPage);
+  return [...Array(perPage * page).keys()].splice(perPage * (page - 1), perPage).sort();
 }
 
 export function addDays(numOfDays: number) {

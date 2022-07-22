@@ -1,6 +1,7 @@
 import { Router } from 'express';
 
 import CreatePublicationController from '@/modules/publications/use-cases/create-publication/create-publication-controller';
+import GetPublicationController from '@/modules/publications/use-cases/get-publication/get-publication-controller';
 import GetPublicationsController from '@/modules/publications/use-cases/get-publications/get-publications-controller';
 import ListCharacterisctsController from '@/modules/publications/use-cases/list-characteristics/list-characteristics-controller';
 
@@ -16,5 +17,8 @@ publicationRouter.get('/characteristics', ensureAuthenticated, listCharacterisct
 
 const getPublicationsController = new GetPublicationsController();
 publicationRouter.get('/', getPublicationsController.handle);
+
+const getPublicationController = new GetPublicationController();
+publicationRouter.get('/:id', ensureAuthenticated, getPublicationController.handle);
 
 export default publicationRouter;

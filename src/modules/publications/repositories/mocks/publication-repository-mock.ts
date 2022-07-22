@@ -1,3 +1,4 @@
+import Characteristic from '@/modules/publications/entities/characteristic';
 import Publication from '@/modules/publications/entities/publication';
 import User from '@/modules/users/entities/user';
 
@@ -63,7 +64,7 @@ class PublicationRepositoryMock implements PublicationRepository {
       (publication) =>
         (!city || publication.city === city) &&
         (!state || publication.state === state) &&
-        (!categories || categories.split(',').includes(publication.category)) &&
+        (!categories || categories.includes(publication.category)) &&
         publication.isArchived === isArchived &&
         (!authorId || publication.author.id === authorId),
     );
@@ -73,23 +74,24 @@ class PublicationRepositoryMock implements PublicationRepository {
         if (orderBy === 'createdAt') {
           return a.createdAt.getTime() - b.createdAt.getTime();
         }
-        if (orderBy === 'name') {
-          return a.name.localeCompare(b.name);
-        }
         return 0;
       })
       .slice(((page || 1) - 1) * perPage, (page || 1) * perPage)
       .map((publication) => {
-        if (publication.hidePhoneNumber) {
-          return Publication.create({
-            ...publication,
-            author: User.create({ ...publication.author, phoneNumber: '' }),
-          });
-        }
-        return publication;
+        return Publication.create({
+          ...publication,
+          author: User.create(publication.author),
+          characteristics: Characteristic.createMany(publication.characteristics),
+        });
       });
 
     return Promise.resolve(publicationsOrderByAndPage);
+  }
+
+  async findById(id: string): Promise<Publication | null> {
+    const publication = this.publications.find((publication) => publication.id === id);
+
+    return publication || null;
   }
 }
 

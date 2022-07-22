@@ -3,7 +3,7 @@ import User from '@/modules/users/entities/user';
 interface UpdateUser {
   name: string;
   email: string;
-  phoneNumber: string;
+  phoneNumber?: string;
 }
 
 interface UserRepository {

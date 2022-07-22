@@ -2,16 +2,17 @@ import { inject, injectable } from 'tsyringe';
 
 import Publication from '@/modules/publications/entities/publication';
 import PublicationRepository from '@/modules/publications/repositories/publication-repository';
+import User from '@/modules/users/entities/user';
 import UseCaseService from '@/shared/use-cases/use-case-service';
 
 interface GetPublicationsRequest {
   city: string;
   state: string;
-  categories?: string; // zero ou mais categorias separadas por vírgula
-  isArchived?: boolean; // default: false
+  categories?: string;
+  isArchived?: boolean;
   authorId?: string;
-  page?: number; // default: 1
-  perPage: number; // default: 20
+  page?: number;
+  perPage: number;
   orderBy?: string;
 }
 
@@ -32,18 +33,32 @@ class GetPublicationsUseCase implements UseCaseService<GetPublicationsRequest, P
     perPage,
     orderBy,
   }: GetPublicationsRequest): Promise<Publication[]> {
+    const isArchivedDefault = false;
+    const pageDefault = 1;
+    const perPageDefault = 20;
+
     const publications = await this.publicationRepository.findAll({
       city,
       state,
-      categories,
-      isArchived,
+      categories: categories ? categories.split(',') : undefined,
+      isArchived: typeof isArchived !== undefined ? isArchived : isArchivedDefault,
       authorId,
-      page,
-      perPage,
+      page: page || pageDefault,
+      perPage: perPage || perPageDefault,
       orderBy,
     });
 
-    return publications;
+    const changedPublications = publications.map((publication) => {
+      if (publication.hidePhoneNumber) {
+        return Publication.create({
+          ...publication,
+          author: User.create({ ...publication.author, phoneNumber: undefined }),
+        });
+      }
+      return publication;
+    });
+
+    return changedPublications;
   }
 }
 

@@ -320,7 +320,7 @@ describe('Get publications use case', () => {
 
     expect(publications).toHaveLength(5);
     expect(publications.map((publication) => publication.author.phoneNumber)).toEqual(
-      Array(totalPublications).fill(''),
+      Array(totalPublications).fill(undefined),
     );
   });
 

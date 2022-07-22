@@ -68,10 +68,10 @@ class PrismaPublicationRepository implements PublicationRepository {
       take: perPage,
       skip: page ? perPage * (page - 1) : 0,
       where: {
-        city: { equals: city },
-        state: { equals: state },
-        category: categories ? { in: categories.split(',') } : undefined,
-        isArchived: isArchived ? { equals: isArchived } : false,
+        city: city ? { equals: city } : undefined,
+        state: state ? { equals: state } : undefined,
+        category: categories ? { in: categories } : undefined,
+        isArchived: typeof isArchived !== undefined ? { equals: isArchived } : undefined,
         authorId: authorId ? { equals: authorId } : undefined,
       },
       orderBy: orderBy ? [{ [orderBy]: 'asc' }] : undefined,
@@ -84,15 +84,31 @@ class PrismaPublicationRepository implements PublicationRepository {
     const publications = allPublications.map((publication) => {
       return {
         ...publication,
-        author: User.create({
-          ...publication.author,
-          phoneNumber: publication.hidePhoneNumber ? '' : publication.author.phoneNumber,
-        }),
+        author: User.create(publication.author),
         characteristics: Characteristic.createMany(publication.characteristics),
       };
     });
 
     return Publication.createMany(publications);
+  }
+
+  async findById(id: string): Promise<Publication | null> {
+    const publication = await prisma.publication.findUnique({
+      where: { id },
+      include: {
+        author: true,
+        characteristics: true,
+      },
+    });
+
+    if (publication === null) {
+      return null;
+    }
+
+    const author = User.create(publication.author);
+    const publicationCharacteristics = Characteristic.createMany(publication.characteristics);
+
+    return Publication.create({ ...publication, author, characteristics: publicationCharacteristics });
   }
 }
 

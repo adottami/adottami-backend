@@ -10,7 +10,7 @@ import app from '@/shared/infra/http/app';
 import HTTPResponse from '@/shared/infra/http/models/http-response';
 import prisma from '@/shared/infra/prisma/prisma-client';
 
-import { getNameNumberList } from './util';
+import { getNameNumberList, getNumPublications } from './util';
 
 describe('Get publications controller', () => {
   const URL = '/publications';
@@ -167,7 +167,7 @@ describe('Get publications controller', () => {
 
     expect(publicationsResponse.statusCode).toEqual(HTTPResponse.STATUS_CODE.OK);
     expect(publicationsResponse.body).toHaveLength(numPublications.length);
-    expect(getNameNumberList(publicationsResponse.body).sort()).toEqual(numPublications);
+    expect(getNameNumberList(publicationsResponse.body)).toEqual(numPublications);
   });
 
   it('should be able to get the publications by filtering by city and state and isArchived', async () => {
@@ -219,10 +219,10 @@ describe('Get publications controller', () => {
 
     expect(publicationsIsArchivedTrueResponse.statusCode).toEqual(HTTPResponse.STATUS_CODE.OK);
     expect(publicationsIsArchivedTrueResponse.body).toHaveLength(numPublications.length);
-    expect(getNameNumberList(publicationsIsArchivedTrueResponse.body).sort()).toEqual(numPublications);
+    expect(getNameNumberList(publicationsIsArchivedTrueResponse.body)).toEqual(numPublications);
     expect(publicationsIsArchivedFalseResponse.statusCode).toEqual(HTTPResponse.STATUS_CODE.OK);
     expect(publicationsIsArchivedFalseResponse.body).toHaveLength(numPublicationsOther.length);
-    expect(getNameNumberList(publicationsIsArchivedFalseResponse.body).sort()).toEqual(numPublicationsOther);
+    expect(getNameNumberList(publicationsIsArchivedFalseResponse.body)).toEqual(numPublicationsOther);
   });
 
   it('should be able to get the publications by filtering by city and state and authorId', async () => {
@@ -280,7 +280,7 @@ describe('Get publications controller', () => {
 
     expect(publications.statusCode).toEqual(HTTPResponse.STATUS_CODE.OK);
     expect(publications.body).toHaveLength(numPublications.length);
-    expect(getNameNumberList(publications.body).sort()).toEqual(numPublications);
+    expect(getNameNumberList(publications.body)).toEqual(numPublications);
   });
 
   it('should be able to get the publications by filtering by city and state using pagination', async () => {
@@ -312,10 +312,6 @@ describe('Get publications controller', () => {
         .set({
           Authorization: `Bearer ${accessToken}`,
         });
-    }
-
-    function getNumPublications(perPage: number, page: number): number[] {
-      return [...Array(perPage * page).keys()].splice(perPage * (page - 1), perPage).sort();
     }
 
     const perPage = 5;
@@ -372,11 +368,11 @@ describe('Get publications controller', () => {
       });
 
     expect(publicationsPage1Response.statusCode).toEqual(HTTPResponse.STATUS_CODE.OK);
-    expect(getNameNumberList(publicationsPage1Response.body).sort()).toEqual(getNumPublications(perPage, page));
+    expect(getNameNumberList(publicationsPage1Response.body)).toEqual(getNumPublications(perPage, page));
     expect(publicationsPage2Response.statusCode).toEqual(HTTPResponse.STATUS_CODE.OK);
-    expect(getNameNumberList(publicationsPage2Response.body).sort()).toEqual(getNumPublications(perPage, page + 1));
+    expect(getNameNumberList(publicationsPage2Response.body)).toEqual(getNumPublications(perPage, page + 1));
     expect(publicationsPage4Response.statusCode).toEqual(HTTPResponse.STATUS_CODE.OK);
-    expect(getNameNumberList(publicationsPage4Response.body).sort()).toEqual(getNumPublications(perPage, page + 3));
+    expect(getNameNumberList(publicationsPage4Response.body)).toEqual(getNumPublications(perPage, page + 3));
     expect(publicationsPage15Response.statusCode).toEqual(HTTPResponse.STATUS_CODE.OK);
     expect(publicationsPage15Response.body).toHaveLength(0);
     expect(publicationsPage15Response.body).toEqual([]);
@@ -388,7 +384,7 @@ describe('Get publications controller', () => {
     for (let i = 0; i < totalPublications; i++) {
       const modifyPublication = {
         ...publicationData,
-        name: `publication_${Math.floor(Math.random() * (10000 - 50)) + 50}`,
+        name: `publication_${Math.floor(Math.random() * (10000000 - 500)) + 500}`,
       };
 
       await request(app)
@@ -460,7 +456,7 @@ describe('Get publications controller', () => {
     expect(publicationsResponse.statusCode).toEqual(HTTPResponse.STATUS_CODE.OK);
     expect(publicationsResponse.body).toHaveLength(totalPublications);
     expect(publicationsResponse.body.map((publication: Publication) => publication.author.phoneNumber)).toEqual(
-      Array(totalPublications).fill(''),
+      Array(totalPublications).fill(undefined),
     );
   });
 

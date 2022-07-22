@@ -17,7 +17,7 @@
     "style:check": "yarn style --check",
     "style:format": "yarn style --write",
     "test": "node --expose-gc --no-compilation-cache ./node_modules/jest/bin/jest --logHeapUsage",
-    "test:ci": "yarn test --maxWorkers=1",
+    "test:ci": "yarn test --maxWorkers=100%",
     "types:check": "tsc --pretty --noEmit",
     "db:push": "dotenv -e .env.development -- yarn prisma db push",
     "db:seed": "dotenv -e .env.development -- yarn prisma db seed",
