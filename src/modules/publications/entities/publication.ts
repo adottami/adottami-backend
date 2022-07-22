@@ -82,6 +82,12 @@ class Publication extends Entity {
     return publication;
   }
 
+  static createMany(publicationsProps: PublicationProps[]) {
+    const publications = publicationsProps.map((publicationProps) => Publication.create(publicationProps));
+
+    return publications;
+  }
+
   toJson() {
     const {
       id,
@@ -117,11 +123,15 @@ class Publication extends Entity {
       state,
       isArchived,
       hidePhoneNumber,
-      characteristics: characteristics.map((characteristic) => characteristic.toJson()),
+      characteristics: Characteristic.manyToJson(characteristics),
       images,
       author: author.toJson(),
       createdAt,
     };
+  }
+
+  static manyToJson(publications: Publication[]) {
+    return publications.map((publication) => publication.toJson());
   }
 }
 

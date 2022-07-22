@@ -4,14 +4,14 @@ interface UserProps extends EntityProps {
   name: string;
   email: string;
   password: string;
-  phoneNumber: string;
+  phoneNumber?: string;
 }
 
 class User extends Entity {
   readonly name: string;
   readonly email: string;
   readonly password: string;
-  readonly phoneNumber: string;
+  readonly phoneNumber?: string;
 
   private constructor({ id, name, email, password, phoneNumber, createdAt }: UserProps) {
     super({ id, createdAt });

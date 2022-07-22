@@ -9,7 +9,7 @@ class PrismaUserRepository implements UserRepository {
         name,
         email,
         password,
-        phoneNumber,
+        phoneNumber: phoneNumber as string,
       },
     });
 
@@ -45,7 +45,7 @@ class PrismaUserRepository implements UserRepository {
       data: {
         name,
         email,
-        phoneNumber,
+        phoneNumber: phoneNumber as string,
       },
     });
 
