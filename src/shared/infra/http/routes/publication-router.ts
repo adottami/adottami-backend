@@ -17,4 +17,8 @@ publicationRouter.get('/characteristics', ensureAuthenticated, listCharacterisct
 const getPublicationsController = new GetPublicationController();
 publicationRouter.get('/:id', ensureAuthenticated, getPublicationsController.handle);
 
+// const editImagesController =
+// publicationRouter.get('/:id/images', ensureAuthenticated, fileUpload, editImagesController.handle);
+// dentro do editImagesController, garantir que o usuario é o author da publication (findPublicationById), compare()
+
 export default publicationRouter;
