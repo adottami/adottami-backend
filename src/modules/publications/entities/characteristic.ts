@@ -19,11 +19,9 @@ class Characteristic extends Entity {
   }
 
   static createMany(characteristicsProps: CharacteristicProps[]): Characteristic[] {
-    const characteristics = [];
-
-    for (const characteristicData of characteristicsProps) {
-      characteristics.push(this.create(characteristicData));
-    }
+    const characteristics = characteristicsProps.map((characteristicProps) =>
+      Characteristic.create(characteristicProps),
+    );
 
     return characteristics;
   }
@@ -35,6 +33,10 @@ class Characteristic extends Entity {
       id,
       name,
     };
+  }
+
+  static manyToJson(characteristics: Characteristic[]) {
+    return characteristics.map((characteristic) => characteristic.toJson());
   }
 }
 

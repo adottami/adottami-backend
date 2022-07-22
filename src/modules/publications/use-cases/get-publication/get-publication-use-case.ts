@@ -1,7 +1,7 @@
 import { injectable, inject } from 'tsyringe';
 
 import Publication from '@/modules/publications/entities/publication';
-import PublicationRepository from '@/modules/repositories/publication-repository';
+import PublicationRepository from '@/modules/publications/repositories/publication-repository';
 import UseCaseService from '@/shared/use-cases/use-case-service';
 
 @injectable()
