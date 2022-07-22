@@ -384,7 +384,7 @@ describe('Get publications controller', () => {
     for (let i = 0; i < totalPublications; i++) {
       const modifyPublication = {
         ...publicationData,
-        name: `publication_${Math.floor(Math.random() * (10000000 - 500)) + 500}`,
+        name: `publication_${totalPublications - i}`,
       };
 
       await request(app)
@@ -397,17 +397,6 @@ describe('Get publications controller', () => {
 
     const perPage = 4;
 
-    const publicationsOrderByCreatedAtResponse = await request(app).get(URL).query({
-      city: 'São Paulo',
-      state: 'SP',
-      categories: '',
-      isArchived: false,
-      authorId: '',
-      page: 1,
-      perPage,
-      orderBy: 'createdAt',
-    });
-
     const publicationsOrderByNameResponse = await request(app).get(URL).query({
       city: 'São Paulo',
       state: 'SP',
@@ -419,13 +408,9 @@ describe('Get publications controller', () => {
       orderBy: 'name',
     });
 
-    expect(publicationsOrderByCreatedAtResponse.statusCode).toEqual(HTTPResponse.STATUS_CODE.OK);
-    expect(publicationsOrderByCreatedAtResponse.body).toHaveLength(perPage);
     expect(publicationsOrderByNameResponse.statusCode).toEqual(HTTPResponse.STATUS_CODE.OK);
     expect(publicationsOrderByNameResponse.body).toHaveLength(perPage);
-    expect(getNameNumberList(publicationsOrderByCreatedAtResponse.body)).not.toEqual(
-      getNameNumberList(publicationsOrderByNameResponse.body),
-    );
+    expect(getNameNumberList(publicationsOrderByNameResponse.body)).toEqual([1, 2, 3, 4]);
   });
 
   it('should get the posts filtering by city and state and should not return the user phoneNumber if hidePhoneNumber is true', async () => {
