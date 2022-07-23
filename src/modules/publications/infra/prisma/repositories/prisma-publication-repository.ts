@@ -110,6 +110,32 @@ class PrismaPublicationRepository implements PublicationRepository {
 
     return Publication.create({ ...publication, author, characteristics: publicationCharacteristics });
   }
+
+  async update(id: string, publication: Publication): Promise<Publication> {
+    await prisma.publication.update({
+      where: { id },
+      data: {
+        name: publication.name,
+        description: publication.description,
+        category: publication.category,
+        gender: publication.gender,
+        breed: publication.breed,
+        weightInGrams: publication.weightInGrams,
+        ageInYears: publication.ageInYears,
+        zipCode: publication.zipCode,
+        city: publication.city,
+        state: publication.state,
+        isArchived: publication.isArchived,
+        hidePhoneNumber: publication.hidePhoneNumber,
+        characteristics: { connect: publication.characteristics },
+      },
+    });
+
+    const author = User.create(publication.author);
+    const publicationCharacteristics = Characteristic.createMany(publication.characteristics);
+
+    return Publication.create({ ...publication, author, characteristics: publicationCharacteristics });
+  }
 }
 
 export default PrismaPublicationRepository;

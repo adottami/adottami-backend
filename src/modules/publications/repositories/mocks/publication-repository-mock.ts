@@ -93,6 +93,14 @@ class PublicationRepositoryMock implements PublicationRepository {
 
     return publication || null;
   }
+
+  async update(id: string, publication: Publication): Promise<Publication> {
+    const publicationIndex = this.publications.findIndex((publication) => publication.id === id);
+
+    this.publications[publicationIndex] = publication;
+
+    return this.publications[publicationIndex];
+  }
 }
 
 export default PublicationRepositoryMock;

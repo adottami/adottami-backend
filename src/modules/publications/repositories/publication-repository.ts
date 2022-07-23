@@ -15,6 +15,7 @@ interface PublicationRepository {
   create(authorId: string, publication: Publication): Promise<Publication>;
   findAll(parameters: ParametersFindAll): Promise<Publication[]>;
   findById(id: string): Promise<Publication | null>;
+  update(id: string, publication: Publication): Promise<Publication>;
 }
 
 export default PublicationRepository;
