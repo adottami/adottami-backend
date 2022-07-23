@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
-import CloudinaryStorageProvider from '@/shared/container/providers/storage-provider/implementations/cloudinary-storage-provider/cloudinary-storage-provider';
 import HTTPResponse from '@/shared/infra/http/models/http-response';
 import UseCaseController from '@/shared/use-cases/use-case-controller';
 
@@ -13,16 +12,6 @@ class EditImagesController implements UseCaseController {
 
     const editImagesUseCase = container.resolve(EditImagesUseCase);
 
-    // const storageProvider = container.resolve(CloudinaryStorageProvider);
-
-    // const removePromises = request.files?.map((file) => storageProvider.remove(file.path));
-
-    // await Promise.all(removePromises);
-
-    // const savePromises = request.files?.map((file) => storageProvider.save(file.path));
-
-    // await Promise.all(savePromises);
-
     const publication = await editImagesUseCase.execute({
       publicationId,
       newImages,
@@ -30,6 +19,10 @@ class EditImagesController implements UseCaseController {
 
     if (publication === null) {
       return new HTTPResponse(response).ok(null);
+    }
+
+    if (publication.author.id !== request.userId) {
+      return new HTTPResponse(response).forbidden();
     }
 
     const publicationJson = publication.toJson();

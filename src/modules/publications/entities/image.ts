@@ -18,6 +18,12 @@ class Image extends Entity {
     return image;
   }
 
+  static createMany(imagesProps: ImageProps[]): Image[] {
+    const images = imagesProps.map((imageProps) => Image.create(imageProps));
+
+    return images;
+  }
+
   toJson() {
     const { id, url, createdAt } = this;
 
