@@ -54,6 +54,7 @@ describe('Create publication controller', () => {
       isArchived: true,
       hidePhoneNumber: false,
       characteristics: [],
+      images: [],
     };
     const response = await request(app)
       .post(URL)
@@ -62,6 +63,7 @@ describe('Create publication controller', () => {
         Authorization: `Bearer ${accessToken}`,
       });
 
+    console.log(response);
     expect(response.statusCode).toBe(HTTPResponse.STATUS_CODE.CREATED);
     expect(response.body).toHaveProperty('id');
     expect(response.body).toHaveProperty('createdAt');
@@ -102,6 +104,7 @@ describe('Create publication controller', () => {
       isArchived: true,
       hidePhoneNumber: false,
       characteristics: [],
+      images: [],
     };
     const response = await request(app)
       .post(URL)

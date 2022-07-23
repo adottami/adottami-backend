@@ -22,6 +22,7 @@ class CreatePublicationController implements UseCaseController {
       isArchived,
       hidePhoneNumber,
       characteristics,
+      images,
     } = request.body;
 
     const { userId } = request;
@@ -43,6 +44,7 @@ class CreatePublicationController implements UseCaseController {
       isArchived,
       hidePhoneNumber,
       characteristics,
+      images,
     });
     const publicationJson = publication.toJson();
 
