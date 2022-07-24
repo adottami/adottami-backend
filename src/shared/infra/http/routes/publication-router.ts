@@ -7,7 +7,6 @@ import ListCharacterisctsController from '@/modules/publications/use-cases/list-
 import UpdatePublicationController from '@/modules/publications/use-cases/update-publication/update-publication-controller';
 
 import ensureAuthenticated from '../middlewares/ensure-authenticated';
-import ensureConfirmUser from '../middlewares/ensure-confirm-user';
 
 const publicationRouter = Router();
 
@@ -24,6 +23,6 @@ const getPublicationController = new GetPublicationController();
 publicationRouter.get('/:id', ensureAuthenticated, getPublicationController.handle);
 
 const updatePublicationController = new UpdatePublicationController();
-publicationRouter.patch('/:id', ensureAuthenticated, ensureConfirmUser, updatePublicationController.handle);
+publicationRouter.patch('/:id', ensureAuthenticated, updatePublicationController.handle);
 
 export default publicationRouter;

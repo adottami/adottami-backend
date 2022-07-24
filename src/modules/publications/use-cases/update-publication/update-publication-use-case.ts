@@ -5,10 +5,12 @@ import Publication from '@/modules/publications/entities/publication';
 import CharacteristicRepository from '@/modules/publications/repositories/characteristic-repository';
 import PublicationRepository from '@/modules/publications/repositories/publication-repository';
 import BadRequestHTTPError from '@/shared/infra/http/errors/bad-request-http-error';
+import ForbiddenHTTPError from '@/shared/infra/http/errors/forbidden-http-error';
 import UseCaseService from '@/shared/use-cases/use-case-service';
 
 interface UpdatePublicationRequest {
-  id: string;
+  userId: string;
+  publicationId: string;
   name?: string;
   description?: string;
   category?: string;
@@ -35,7 +37,8 @@ class UpdatePublicationUseCase implements UseCaseService<UpdatePublicationReques
   ) {}
 
   async execute({
-    id,
+    userId,
+    publicationId,
     name,
     description,
     category,
@@ -50,10 +53,14 @@ class UpdatePublicationUseCase implements UseCaseService<UpdatePublicationReques
     hidePhoneNumber,
     characteristics,
   }: UpdatePublicationRequest): Promise<Publication> {
-    const publication = await this.publicationRepository.findById(id);
+    const publication = await this.publicationRepository.findById(publicationId);
 
     if (!publication) {
       throw new BadRequestHTTPError('Publication does not exists');
+    }
+
+    if (publication.author.id !== userId) {
+      throw new ForbiddenHTTPError("User isn't publication author");
     }
 
     if (characteristics !== undefined) {
@@ -84,7 +91,10 @@ class UpdatePublicationUseCase implements UseCaseService<UpdatePublicationReques
       characteristics: characteristics !== undefined ? characteristics : publication.characteristics,
     };
 
-    const updatedPublication = await this.publicationRepository.update(id, Publication.create(publicationData));
+    const updatedPublication = await this.publicationRepository.update(
+      publicationId,
+      Publication.create(publicationData),
+    );
 
     return updatedPublication;
   }
