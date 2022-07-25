@@ -2,6 +2,7 @@ import Characteristic from '@/modules/publications/entities/characteristic';
 import Publication from '@/modules/publications/entities/publication';
 import User from '@/modules/users/entities/user';
 
+import Image from '../../entities/image';
 import PublicationRepository, { ParametersFindAll } from '../publication-repository';
 
 class PublicationRepositoryMock implements PublicationRepository {
@@ -24,6 +25,7 @@ class PublicationRepositoryMock implements PublicationRepository {
       isArchived,
       hidePhoneNumber,
       characteristics,
+      images,
       createdAt,
     }: Publication,
   ): Promise<Publication> {
@@ -42,6 +44,7 @@ class PublicationRepositoryMock implements PublicationRepository {
       isArchived,
       hidePhoneNumber,
       characteristics,
+      images,
       createdAt,
     });
 
@@ -92,6 +95,14 @@ class PublicationRepositoryMock implements PublicationRepository {
     const publication = this.publications.find((publication) => publication.id === id);
 
     return publication || null;
+  }
+
+  async updateImages(id: string, newImages: Image[]): Promise<void> {
+    const publicationIndex = this.publications.findIndex((publication) => publication.id === id);
+
+    const newPublication = Publication.create({ ...this.publications[publicationIndex], images: newImages });
+
+    this.publications[publicationIndex] = newPublication;
   }
 }
 

@@ -64,6 +64,7 @@ describe('Get publication controller', () => {
       isArchived: true,
       hidePhoneNumber: false,
       characteristics: [],
+      images: [],
     };
 
     createPubResponse = await request(app)
@@ -98,6 +99,7 @@ describe('Get publication controller', () => {
     expect(response.body.isArchived).toBe(publicationData.isArchived);
     expect(response.body.hidePhoneNumber).toBe(publicationData.hidePhoneNumber);
     expect(response.body.characteristics).toEqual(publicationData.characteristics);
+    expect(response.body.images).toEqual(publicationData.images);
   });
 
   it('should be able to get a publication and not show author phone number', async () => {
@@ -116,6 +118,7 @@ describe('Get publication controller', () => {
       isArchived: true,
       hidePhoneNumber: true,
       characteristics: [],
+      images: [],
     };
 
     createPubResponse = await request(app)
@@ -150,5 +153,6 @@ describe('Get publication controller', () => {
     expect(response.body.isArchived).toBe(publicationData.isArchived);
     expect(response.body.hidePhoneNumber).toBe(publicationData.hidePhoneNumber);
     expect(response.body.characteristics).toEqual(publicationData.characteristics);
+    expect(response.body.images).toEqual(publicationData.images);
   });
 });

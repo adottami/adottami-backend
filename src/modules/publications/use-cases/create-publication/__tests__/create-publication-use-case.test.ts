@@ -51,6 +51,7 @@ describe('Create publication use case', () => {
       isArchived: true,
       hidePhoneNumber: false,
       characteristics: await characteristicRepository.findAll(),
+      images: [],
     };
     const publication = await useCase.execute(publicationData);
     expect(publication).toBeInstanceOf(Publication);

@@ -2,6 +2,7 @@ import User from '@/modules/users/entities/user';
 import Entity, { EntityProps } from '@/shared/entities/entity';
 
 import Characteristic from './characteristic';
+import Image from './image';
 
 interface PublicationProps extends EntityProps {
   author: User;
@@ -18,6 +19,7 @@ interface PublicationProps extends EntityProps {
   isArchived: boolean;
   hidePhoneNumber: boolean;
   characteristics: Characteristic[];
+  images: Image[];
 }
 
 class Publication extends Entity {
@@ -35,6 +37,7 @@ class Publication extends Entity {
   readonly isArchived: boolean;
   readonly hidePhoneNumber: boolean;
   readonly characteristics: Characteristic[];
+  readonly images: Image[];
 
   private constructor({
     id,
@@ -52,6 +55,7 @@ class Publication extends Entity {
     isArchived,
     hidePhoneNumber,
     characteristics,
+    images,
     createdAt,
   }: PublicationProps) {
     super({ id, createdAt });
@@ -69,6 +73,7 @@ class Publication extends Entity {
     this.isArchived = isArchived;
     this.hidePhoneNumber = hidePhoneNumber;
     this.characteristics = characteristics;
+    this.images = images;
   }
 
   static create(publicationProps: PublicationProps) {
@@ -100,6 +105,7 @@ class Publication extends Entity {
       isArchived,
       hidePhoneNumber,
       characteristics,
+      images,
       createdAt,
     } = this;
 
@@ -118,6 +124,7 @@ class Publication extends Entity {
       isArchived,
       hidePhoneNumber,
       characteristics: Characteristic.manyToJson(characteristics),
+      images,
       author: author.toJson(),
       createdAt,
     };
