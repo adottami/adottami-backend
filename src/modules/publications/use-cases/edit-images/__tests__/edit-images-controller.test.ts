@@ -2,18 +2,16 @@
  * @jest-environment ./prisma/prisma-test-environment.ts
  */
 
-import fs from 'fs-extra';
-import path from 'path';
 import request from 'supertest';
 
-import { TEMPORARY_FOLDER } from '@/config/global-config/constants';
 import User from '@/modules/users/entities/user';
 import app from '@/shared/infra/http/app';
 import HTTPResponse from '@/shared/infra/http/models/http-response';
 import prisma from '@/shared/infra/prisma/prisma-client';
 
+import { saveSampleImageToFileSystem } from './utils';
+
 describe('Edit images controller', () => {
-  // const URL = '/publications/:id/images';
   let accessToken: string;
   let userData: User;
   let userId: string;
@@ -69,15 +67,8 @@ describe('Edit images controller', () => {
     expect(createResponse.body).toHaveProperty('createdAt');
     expect(createResponse.body.author.id).toBe(userId);
 
-    // Create test image
-    const imageFileName = 'image.jpg';
-    const imageFileData = 'file-data';
-    const imageFilePath = path.join(TEMPORARY_FOLDER, imageFileName);
+    const imageFilePath = await saveSampleImageToFileSystem();
 
-    await fs.mkdir(TEMPORARY_FOLDER, { recursive: true });
-    await fs.writeFile(imageFilePath, imageFileData);
-
-    // Make the edit request
     const editResponse = await request(app)
       .patch(`/publications/${createResponse.body.id}/images`)
       .attach('images', imageFilePath)
@@ -87,6 +78,15 @@ describe('Edit images controller', () => {
       });
 
     expect(editResponse.statusCode).toBe(HTTPResponse.STATUS_CODE.OK);
-    // Add the other expects to check the response...
+    expect(editResponse.body).toEqual({
+      ...createResponse.body,
+      images: [
+        {
+          id: expect.any(String),
+          url: expect.any(String),
+          createdAt: expect.any(String),
+        },
+      ],
+    });
   });
 });
