@@ -24,6 +24,6 @@ const getPublicationController = new GetPublicationController();
 publicationRouter.get('/:id', ensureAuthenticated, getPublicationController.handle);
 
 const editImagesController = new EditImagesController();
-publicationRouter.get('/:id/images', ensureAuthenticated, fileUpload, editImagesController.handle);
+publicationRouter.patch('/:id/images', ensureAuthenticated, fileUpload, editImagesController.handle);
 
 export default publicationRouter;

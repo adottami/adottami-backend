@@ -8,13 +8,13 @@ import EditImagesUseCase from './edit-images-use-case';
 
 class EditImagesController implements UseCaseController {
   async handle(request: Request, response: Response): Promise<Response> {
-    const { publicationId, newImages } = request.body;
-
+    const publicationId = request.params.id;
+    const newFiles = request.files;
     const editImagesUseCase = container.resolve(EditImagesUseCase);
 
     const publication = await editImagesUseCase.execute({
       publicationId,
-      newImages,
+      newFiles,
     });
 
     if (publication === null) {

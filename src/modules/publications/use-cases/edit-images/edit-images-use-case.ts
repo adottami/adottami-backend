@@ -9,7 +9,7 @@ import PublicationRepository from '../../repositories/publication-repository';
 
 interface EditImagesRequest {
   publicationId: string;
-  newImages: Image[];
+  newFiles: Express.Multer.File[] | undefined;
 }
 
 @injectable()
@@ -21,18 +21,17 @@ class EditImagesUseCase implements UseCaseService<EditImagesRequest, Publication
     private storageProvider: StorageProvider,
   ) {}
 
-  async execute({ publicationId }: EditImagesRequest): Promise<Publication | null> {
+  async execute({ publicationId, newFiles }: EditImagesRequest): Promise<Publication | null> {
     const publication = await this.publicationRepository.findById(publicationId);
 
-    if (!publication) {
+    if (!newFiles || !publication) {
       return null;
     }
 
-    const removePromises = publication.images.map((image) => this.storageProvider.remove(image.url));
+    const removePromises = publication.images.map((image) => this.storageProvider.remove(image.id));
     await Promise.all(removePromises);
 
-    const savePromises = publication?.images.map((image) => this.storageProvider.save(image.url));
-
+    const savePromises = newFiles.map((file) => this.storageProvider.save(file.path));
     const saveResults = await Promise.all(savePromises);
 
     const images = saveResults.map((result) => Image.create({ id: result.id, url: result.url }));
