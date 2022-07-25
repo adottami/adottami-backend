@@ -9,31 +9,18 @@ import EditImagesUseCase from './edit-images-use-case';
 class EditImagesController implements UseCaseController {
   async handle(request: Request, response: Response): Promise<Response> {
     const publicationId = request.params.id;
-    const newFiles = request.files;
+    const newFiles = request.files ?? [];
     const editImagesUseCase = container.resolve(EditImagesUseCase);
 
     const publication = await editImagesUseCase.execute({
+      userId: request.userId,
       publicationId,
       newFiles,
     });
 
-    if (publication === null) {
-      return new HTTPResponse(response).ok(null);
-    }
-
-    if (publication.author.id !== request.userId) {
-      return new HTTPResponse(response).forbidden();
-    }
-
     const publicationJson = publication.toJson();
 
-    return new HTTPResponse(response).ok({
-      ...publicationJson,
-      author: {
-        ...publicationJson.author,
-        phoneNumber: publication.hidePhoneNumber ? undefined : publication.author.phoneNumber,
-      },
-    });
+    return new HTTPResponse(response).ok(publicationJson);
   }
 }
 
