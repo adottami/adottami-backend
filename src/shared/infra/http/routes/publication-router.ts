@@ -24,6 +24,18 @@ const getPublicationController = new GetPublicationController();
 publicationRouter.get('/:id', ensureAuthenticated, getPublicationController.handle);
 
 const editImagesController = new EditImagesController();
-publicationRouter.patch('/:id/images', ensureAuthenticated, fileUpload, editImagesController.handle);
+publicationRouter.patch(
+  '/:id/images',
+  ensureAuthenticated,
+  fileUpload({
+    fieldName: 'images',
+    mimeTypes: ['image/jpeg', 'image/png'],
+    limits: {
+      maxFiles: 5,
+      maxFileSizeInBytes: 1024 * 1024 * 5, // 5MB
+    },
+  }),
+  editImagesController.handle,
+);
 
 export default publicationRouter;
