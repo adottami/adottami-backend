@@ -54,7 +54,6 @@ describe('Create publication controller', () => {
       isArchived: true,
       hidePhoneNumber: false,
       characteristics: [],
-      images: [],
     };
     const response = await request(app)
       .post(URL)
@@ -103,7 +102,6 @@ describe('Create publication controller', () => {
       isArchived: true,
       hidePhoneNumber: false,
       characteristics: [],
-      images: [],
     };
     const response = await request(app)
       .post(URL)
