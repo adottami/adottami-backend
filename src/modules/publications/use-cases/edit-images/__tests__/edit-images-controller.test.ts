@@ -2,8 +2,11 @@
  * @jest-environment ./prisma/prisma-test-environment.ts
  */
 
+import fs from 'fs-extra';
+import path from 'path';
 import request from 'supertest';
 
+import { TEMPORARY_FOLDER } from '@/config/global-config/constants';
 import User from '@/modules/users/entities/user';
 import app from '@/shared/infra/http/app';
 import HTTPResponse from '@/shared/infra/http/models/http-response';
@@ -52,19 +55,38 @@ describe('Edit images controller', () => {
       isArchived: true,
       hidePhoneNumber: false,
       characteristics: [],
-      images: [],
     };
 
-    const responsePublication = await request(app)
+    const createResponse = await request(app)
       .post('/publications')
       .send(publicationData)
       .set({
         Authorization: `Bearer ${accessToken}`,
       });
 
-    expect(responsePublication.statusCode).toBe(HTTPResponse.STATUS_CODE.CREATED);
-    expect(responsePublication.body).toHaveProperty('id');
-    expect(responsePublication.body).toHaveProperty('createdAt');
-    expect(responsePublication.body.author.id).toBe(userId);
+    expect(createResponse.statusCode).toBe(HTTPResponse.STATUS_CODE.CREATED);
+    expect(createResponse.body).toHaveProperty('id');
+    expect(createResponse.body).toHaveProperty('createdAt');
+    expect(createResponse.body.author.id).toBe(userId);
+
+    // Create test image
+    const imageFileName = 'image.jpg';
+    const imageFileData = 'file-data';
+    const imageFilePath = path.join(TEMPORARY_FOLDER, imageFileName);
+
+    await fs.mkdir(TEMPORARY_FOLDER, { recursive: true });
+    await fs.writeFile(imageFilePath, imageFileData);
+
+    // Make the edit request
+    const editResponse = await request(app)
+      .patch(`/publications/${createResponse.body.id}/images`)
+      .attach('images', imageFilePath)
+      .set({
+        'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${accessToken}`,
+      });
+
+    expect(editResponse.statusCode).toBe(HTTPResponse.STATUS_CODE.OK);
+    // Add the other expects to check the response...
   });
 });
