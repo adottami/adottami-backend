@@ -176,7 +176,7 @@ class PrismaPublicationRepository implements PublicationRepository {
         state: state !== undefined ? state : undefined,
         isArchived: isArchived !== undefined ? isArchived : undefined,
         hidePhoneNumber: hidePhoneNumber !== undefined ? hidePhoneNumber : undefined,
-        characteristics: characteristics !== undefined ? { connect: characteristics } : undefined,
+        characteristics: characteristics !== undefined ? { set: characteristics } : undefined,
       },
     });
 
