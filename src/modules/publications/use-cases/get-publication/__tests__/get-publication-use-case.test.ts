@@ -61,6 +61,7 @@ describe('Get publication use case', () => {
       isArchived: true,
       hidePhoneNumber: false,
       characteristics: await characteristicRepository.findAll(),
+      images: [],
     };
 
     const publicationId = (await publicationUseCase.execute(publicationData)).id;

@@ -14,6 +14,7 @@ function handleApplicationError(error: unknown, _request: Request, response: Res
     return error.toResponse(response);
   }
   if (error instanceof Error) {
+    console.error(error);
     return new InternalServerHTTPError(error.message).toResponse(response);
   }
   throw error;

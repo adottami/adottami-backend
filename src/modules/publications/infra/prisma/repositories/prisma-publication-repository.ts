@@ -1,8 +1,10 @@
 import Characteristic from '@/modules/publications/entities/characteristic';
+import Image from '@/modules/publications/entities/image';
 import Publication from '@/modules/publications/entities/publication';
 import PublicationRepository, {
   ParametersFindAll,
   UpdatePublication,
+  // eslint-disable-next-line import/no-named-as-default, import/no-named-as-default-member
 } from '@/modules/publications/repositories/publication-repository';
 import User from '@/modules/users/entities/user';
 import prisma from '@/shared/infra/prisma/prisma-client';
@@ -24,6 +26,7 @@ class PrismaPublicationRepository implements PublicationRepository {
       isArchived,
       hidePhoneNumber,
       characteristics,
+      images,
     }: Publication,
   ): Promise<Publication> {
     const publication = await prisma.publication.create({
@@ -44,17 +47,27 @@ class PrismaPublicationRepository implements PublicationRepository {
         characteristics: {
           connect: characteristics,
         },
+        images: {
+          createMany: { data: images.map((image) => ({ id: image.id, url: image.url })) },
+        },
       },
       include: {
         author: true,
         characteristics: true,
+        images: true,
       },
     });
 
     const author = User.create(publication.author);
     const publicationCharacteristics = Characteristic.createMany(publication.characteristics);
+    const imagesPublication = Image.createMany(publication.images);
 
-    return Publication.create({ ...publication, author, characteristics: publicationCharacteristics });
+    return Publication.create({
+      ...publication,
+      author,
+      characteristics: publicationCharacteristics,
+      images: imagesPublication,
+    });
   }
 
   async findAll({
@@ -81,6 +94,7 @@ class PrismaPublicationRepository implements PublicationRepository {
       include: {
         author: true,
         characteristics: true,
+        images: true,
       },
     });
 
@@ -89,6 +103,7 @@ class PrismaPublicationRepository implements PublicationRepository {
         ...publication,
         author: User.create(publication.author),
         characteristics: Characteristic.createMany(publication.characteristics),
+        images: Image.createMany(publication.images),
       };
     });
 
@@ -101,6 +116,7 @@ class PrismaPublicationRepository implements PublicationRepository {
       include: {
         author: true,
         characteristics: true,
+        images: true,
       },
     });
 
@@ -110,8 +126,22 @@ class PrismaPublicationRepository implements PublicationRepository {
 
     const author = User.create(publication.author);
     const publicationCharacteristics = Characteristic.createMany(publication.characteristics);
+    const publicationImages = Image.createMany(publication.images);
 
-    return Publication.create({ ...publication, author, characteristics: publicationCharacteristics });
+    return Publication.create({
+      ...publication,
+      author,
+      characteristics: publicationCharacteristics,
+      images: publicationImages,
+    });
+  }
+
+  async updateImages(publicationId: string, newImages: Image[]): Promise<void> {
+    await prisma.image.deleteMany({ where: { publicationId } });
+
+    await prisma.image.createMany({
+      data: newImages.map((image) => ({ id: image.id, url: image.url, publicationId })),
+    });
   }
 
   async update(

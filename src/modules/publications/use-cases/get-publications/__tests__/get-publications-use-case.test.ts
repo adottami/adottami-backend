@@ -38,6 +38,7 @@ describe('Get publications use case', () => {
       isArchived: false,
       hidePhoneNumber: false,
       characteristics: [],
+      images: [],
     });
   });
 

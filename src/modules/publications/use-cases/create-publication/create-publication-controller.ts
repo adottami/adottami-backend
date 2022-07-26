@@ -43,6 +43,7 @@ class CreatePublicationController implements UseCaseController {
       isArchived,
       hidePhoneNumber,
       characteristics,
+      images: [],
     });
     const publicationJson = publication.toJson();
 

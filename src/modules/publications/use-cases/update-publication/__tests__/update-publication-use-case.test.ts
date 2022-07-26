@@ -57,6 +57,7 @@ describe('Update publication use case', () => {
       isArchived: true,
       hidePhoneNumber: false,
       characteristics: await characteristicRepository.findAll(),
+      images: [],
     };
     const publication = await createPubUseCase.execute(publicationData);
 
@@ -155,6 +156,7 @@ describe('Update publication use case', () => {
       isArchived: true,
       hidePhoneNumber: false,
       characteristics: await characteristicRepository.findAll(),
+      images: [],
     };
     const publication = await createPubUseCase.execute(publicationData);
 

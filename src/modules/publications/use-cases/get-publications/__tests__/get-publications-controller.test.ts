@@ -55,6 +55,7 @@ describe('Get publications controller', () => {
       isArchived: false,
       hidePhoneNumber: false,
       characteristics: [],
+      images: [],
     };
   });
 
@@ -299,6 +300,7 @@ describe('Get publications controller', () => {
       isArchived: false,
       hidePhoneNumber: false,
       characteristics: [],
+      images: [],
     };
 
     const totalPublications = 25;

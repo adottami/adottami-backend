@@ -8,6 +8,8 @@ import UserRepository from '@/modules/users/repositories/user-repository';
 import BadRequestHTTPError from '@/shared/infra/http/errors/bad-request-http-error';
 import UseCaseService from '@/shared/use-cases/use-case-service';
 
+import Image from '../../entities/image';
+
 interface CreatePublicationRequest {
   authorId: string;
   name: string;
@@ -23,6 +25,7 @@ interface CreatePublicationRequest {
   isArchived: boolean;
   hidePhoneNumber: boolean;
   characteristics: Characteristic[];
+  images: Image[];
 }
 
 @injectable()
@@ -53,6 +56,7 @@ class CreatePublicationUseCase implements UseCaseService<CreatePublicationReques
     isArchived,
     hidePhoneNumber,
     characteristics,
+    images,
   }: CreatePublicationRequest): Promise<Publication> {
     const author = await this.userRepository.findById(authorId);
 
@@ -84,6 +88,7 @@ class CreatePublicationUseCase implements UseCaseService<CreatePublicationReques
       isArchived,
       hidePhoneNumber,
       characteristics,
+      images,
     });
 
     const publication = await this.publicationRepository.create(authorId, publicationData);
