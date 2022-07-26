@@ -4,7 +4,7 @@ import { container } from 'tsyringe';
 import HTTPResponse from '@/shared/infra/http/models/http-response';
 import UseCaseController from '@/shared/use-cases/use-case-controller';
 
-import UpdateUserPasswordUseCase from './update-user-password-case';
+import UpdateUserPasswordUseCase from './update-user-password-use-case';
 
 class UpdateUserPasswordController implements UseCaseController {
   handle = async (request: Request, response: Response): Promise<Response> => {
