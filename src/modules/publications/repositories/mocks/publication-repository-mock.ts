@@ -105,7 +105,7 @@ class PublicationRepositoryMock implements PublicationRepository {
       throw new NotFoundHTTPError('Publication not found');
     }
 
-    this.publications[publicationIndex] = publication;
+    this.publications[publicationIndex] = Publication.create(publication);
 
     return this.publications[publicationIndex];
   }

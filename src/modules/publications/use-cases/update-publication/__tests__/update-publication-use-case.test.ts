@@ -99,7 +99,9 @@ describe('Update publication use case', () => {
     expect(updatePublication?.state).toBe(publication.state);
     expect(updatePublication?.isArchived).not.toBe(publication.isArchived);
     expect(updatePublication?.hidePhoneNumber).toBe(publication.hidePhoneNumber);
-    expect(updatePublication?.characteristics).toEqual(publication.characteristics);
+    expect(updatePublication?.characteristics.map((characteristic) => characteristic.id)).toEqual(
+      publication.characteristics.map((characteristic) => characteristic.id),
+    );
   });
 
   it('should not be able to update a uncreated publication', async () => {
