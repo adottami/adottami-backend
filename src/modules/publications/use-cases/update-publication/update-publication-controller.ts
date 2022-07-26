@@ -46,6 +46,10 @@ class UpdatePublicationController implements UseCaseController {
       characteristics,
     });
 
+    if (updatedPublication === null) {
+      return new HTTPResponse(response).ok(null);
+    }
+
     const publicationJson = updatedPublication.toJson();
 
     return new HTTPResponse(response).ok({

@@ -82,22 +82,23 @@ describe('Update publication use case', () => {
 
     expect(updatePublication).toBeInstanceOf(Publication);
     expect(updatePublication).toHaveProperty('id');
-    expect(updatePublication.id).toBe(publication.id);
+    expect(updatePublication).not.toBeNull();
+    expect(updatePublication?.id).toBe(publication.id);
     expect(updatePublication).toHaveProperty('createdAt');
-    expect(updatePublication.author.id).toBe(publication.author.id);
-    expect(updatePublication.name).not.toBe(publication.name);
-    expect(updatePublication.description).toBe(publication.description);
-    expect(updatePublication.category).toBe(publication.category);
-    expect(updatePublication.gender).not.toBe(publication.gender);
-    expect(updatePublication.breed).toBe(publication.breed);
-    expect(updatePublication.weightInGrams).toBe(publication.weightInGrams);
-    expect(updatePublication.ageInYears).not.toBe(publication.ageInYears);
-    expect(updatePublication.zipCode).not.toBe(publication.zipCode);
-    expect(updatePublication.city).toBe(publication.city);
-    expect(updatePublication.state).toBe(publication.state);
-    expect(updatePublication.isArchived).not.toBe(publication.isArchived);
-    expect(updatePublication.hidePhoneNumber).toBe(publication.hidePhoneNumber);
-    expect(updatePublication.characteristics).toEqual(publication.characteristics);
+    expect(updatePublication?.author.id).toBe(publication.author.id);
+    expect(updatePublication?.name).not.toBe(publication.name);
+    expect(updatePublication?.description).toBe(publication.description);
+    expect(updatePublication?.category).toBe(publication.category);
+    expect(updatePublication?.gender).not.toBe(publication.gender);
+    expect(updatePublication?.breed).toBe(publication.breed);
+    expect(updatePublication?.weightInGrams).toBe(publication.weightInGrams);
+    expect(updatePublication?.ageInYears).not.toBe(publication.ageInYears);
+    expect(updatePublication?.zipCode).not.toBe(publication.zipCode);
+    expect(updatePublication?.city).toBe(publication.city);
+    expect(updatePublication?.state).toBe(publication.state);
+    expect(updatePublication?.isArchived).not.toBe(publication.isArchived);
+    expect(updatePublication?.hidePhoneNumber).toBe(publication.hidePhoneNumber);
+    expect(updatePublication?.characteristics).toEqual(publication.characteristics);
   });
 
   it('should not be able to update a uncreated publication', async () => {

@@ -1,6 +1,9 @@
 import Characteristic from '@/modules/publications/entities/characteristic';
 import Publication from '@/modules/publications/entities/publication';
-import PublicationRepository, { ParametersFindAll } from '@/modules/publications/repositories/publication-repository';
+import PublicationRepository, {
+  ParametersFindAll,
+  UpdatePublication,
+} from '@/modules/publications/repositories/publication-repository';
 import User from '@/modules/users/entities/user';
 import prisma from '@/shared/infra/prisma/prisma-client';
 
@@ -111,30 +114,46 @@ class PrismaPublicationRepository implements PublicationRepository {
     return Publication.create({ ...publication, author, characteristics: publicationCharacteristics });
   }
 
-  async update(id: string, publication: Publication): Promise<Publication> {
+  async update(
+    id: string,
+    {
+      name,
+      description,
+      category,
+      gender,
+      breed,
+      weightInGrams,
+      ageInYears,
+      zipCode,
+      city,
+      state,
+      isArchived,
+      hidePhoneNumber,
+      characteristics,
+    }: UpdatePublication,
+  ): Promise<Publication | null> {
     await prisma.publication.update({
       where: { id },
       data: {
-        name: publication.name,
-        description: publication.description,
-        category: publication.category,
-        gender: publication.gender,
-        breed: publication.breed,
-        weightInGrams: publication.weightInGrams,
-        ageInYears: publication.ageInYears,
-        zipCode: publication.zipCode,
-        city: publication.city,
-        state: publication.state,
-        isArchived: publication.isArchived,
-        hidePhoneNumber: publication.hidePhoneNumber,
-        characteristics: { connect: publication.characteristics },
+        name: name !== undefined ? name : undefined,
+        description: description !== undefined ? description : undefined,
+        category: category !== undefined ? category : undefined,
+        gender: gender !== undefined ? gender : undefined,
+        breed: breed !== undefined ? breed : undefined,
+        weightInGrams: weightInGrams !== undefined ? weightInGrams : undefined,
+        ageInYears: ageInYears !== undefined ? ageInYears : undefined,
+        zipCode: zipCode !== undefined ? zipCode : undefined,
+        city: city !== undefined ? city : undefined,
+        state: state !== undefined ? state : undefined,
+        isArchived: isArchived !== undefined ? isArchived : undefined,
+        hidePhoneNumber: hidePhoneNumber !== undefined ? hidePhoneNumber : undefined,
+        characteristics: characteristics !== undefined ? { connect: characteristics } : undefined,
       },
     });
 
-    const author = User.create(publication.author);
-    const publicationCharacteristics = Characteristic.createMany(publication.characteristics);
+    const updatedPublication = await this.findById(id);
 
-    return Publication.create({ ...publication, author, characteristics: publicationCharacteristics });
+    return updatedPublication;
   }
 }
 

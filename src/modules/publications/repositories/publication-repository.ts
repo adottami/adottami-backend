@@ -11,11 +11,27 @@ export interface ParametersFindAll {
   orderBy?: string;
 }
 
+export interface UpdatePublication {
+  name?: string;
+  description?: string;
+  category?: string;
+  gender?: string;
+  breed?: string | null;
+  weightInGrams?: number | null;
+  ageInYears?: number | null;
+  zipCode?: string;
+  city?: string;
+  state?: string;
+  isArchived?: boolean;
+  hidePhoneNumber?: boolean;
+  characteristics?: Array<{ id: string }>;
+}
+
 interface PublicationRepository {
   create(authorId: string, publication: Publication): Promise<Publication>;
   findAll(parameters: ParametersFindAll): Promise<Publication[]>;
   findById(id: string): Promise<Publication | null>;
-  update(id: string, publication: Publication): Promise<Publication>;
+  update(id: string, updateData: UpdatePublication): Promise<Publication | null>;
 }
 
 export default PublicationRepository;

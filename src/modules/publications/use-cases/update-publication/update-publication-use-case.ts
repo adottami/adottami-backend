@@ -27,7 +27,7 @@ interface UpdatePublicationRequest {
 }
 
 @injectable()
-class UpdatePublicationUseCase implements UseCaseService<UpdatePublicationRequest, Publication> {
+class UpdatePublicationUseCase implements UseCaseService<UpdatePublicationRequest, Publication | null> {
   constructor(
     @inject('PublicationRepository')
     private publicationRepository: PublicationRepository,
@@ -52,7 +52,7 @@ class UpdatePublicationUseCase implements UseCaseService<UpdatePublicationReques
     isArchived,
     hidePhoneNumber,
     characteristics,
-  }: UpdatePublicationRequest): Promise<Publication> {
+  }: UpdatePublicationRequest): Promise<Publication | null> {
     const publication = await this.publicationRepository.findById(publicationId);
 
     if (!publication) {
@@ -96,7 +96,7 @@ class UpdatePublicationUseCase implements UseCaseService<UpdatePublicationReques
       Publication.create(publicationData),
     );
 
-    return updatedPublication;
+    return updatedPublication || null;
   }
 }
 
