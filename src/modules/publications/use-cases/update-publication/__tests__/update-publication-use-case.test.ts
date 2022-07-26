@@ -9,6 +9,7 @@ import CreateUserUseCase from '@/modules/users/use-cases/create-user/create-user
 import HashProvider from '@/shared/container/providers/hash-provider/hash-provider';
 import HashProviderMock from '@/shared/container/providers/hash-provider/mocks/hash-provider-mock';
 import BadRequestHTTPError from '@/shared/infra/http/errors/bad-request-http-error';
+import ForbiddenHTTPError from '@/shared/infra/http/errors/forbidden-http-error';
 
 import CreatePublicationUseCase from '../../create-publication/create-publication-use-case';
 import UpdatePublicationUseCase from '../update-publication-use-case';
@@ -57,11 +58,11 @@ describe('Update publication use case', () => {
       hidePhoneNumber: false,
       characteristics: await characteristicRepository.findAll(),
     };
-
     const publication = await createPubUseCase.execute(publicationData);
 
     const updateData = {
-      id: publication.id,
+      userId: user.id,
+      publicationId: publication.id,
       name: 'new string',
       description: undefined,
       category: undefined,
@@ -100,8 +101,17 @@ describe('Update publication use case', () => {
   });
 
   it('should not be able to update a uncreated publication', async () => {
+    const userData = {
+      name: 'Test name',
+      email: 'test@test.com.br',
+      password: '1234',
+      phoneNumber: '123456789',
+    };
+    const user = await userUseCase.execute(userData);
+
     const updateData = {
-      id: 'randomId',
+      userId: user.id,
+      publicationId: 'randomId',
       name: 'new string',
       description: undefined,
       category: undefined,
@@ -120,5 +130,51 @@ describe('Update publication use case', () => {
     await expect(useCase.execute(updateData)).rejects.toEqual(new BadRequestHTTPError('Publication does not exists'));
   });
 
-  // Teste mudando características
+  it('should not be able to update a publication of another user', async () => {
+    const userData = {
+      name: 'Test name',
+      email: 'test@test.com.br',
+      password: '1234',
+      phoneNumber: '123456789',
+    };
+    const user = await userUseCase.execute(userData);
+
+    const publicationData = {
+      authorId: user.id,
+      name: 'string',
+      description: 'string',
+      category: 'string',
+      gender: 'string',
+      breed: 'string',
+      weightInGrams: 14,
+      ageInYears: 23,
+      zipCode: 'string',
+      city: 'string',
+      state: 'string',
+      isArchived: true,
+      hidePhoneNumber: false,
+      characteristics: await characteristicRepository.findAll(),
+    };
+    const publication = await createPubUseCase.execute(publicationData);
+
+    const updateData = {
+      userId: 'randomId',
+      publicationId: publication.id,
+      name: 'new string',
+      description: undefined,
+      category: undefined,
+      gender: 'new string',
+      breed: undefined,
+      weightInGrams: undefined,
+      ageInYears: 12,
+      zipCode: 'new string',
+      city: undefined,
+      state: undefined,
+      isArchived: false,
+      hidePhoneNumber: undefined,
+      characteristics: undefined,
+    };
+
+    await expect(useCase.execute(updateData)).rejects.toEqual(new ForbiddenHTTPError("User isn't publication author"));
+  });
 });

@@ -24,15 +24,13 @@ class UpdatePublicationController implements UseCaseController {
       characteristics,
     } = request.body;
 
-    const { publicationId } = request.params;
-
-    const { userId } = request.body.userId;
+    const { id } = request.params;
 
     const updatePublicationUseCase = container.resolve(UpdatePublicationUseCase);
 
     const updatedPublication = await updatePublicationUseCase.execute({
-      userId,
-      publicationId,
+      userId: request.userId,
+      publicationId: id,
       name,
       description,
       category,

@@ -3,10 +3,8 @@
  */
 
 import request from 'supertest';
-import { container } from 'tsyringe';
 
 import User from '@/modules/users/entities/user';
-import TokenProvider from '@/shared/container/providers/token-provider/token-provider';
 import app from '@/shared/infra/http/app';
 import HTTPResponse from '@/shared/infra/http/models/http-response';
 import prisma from '@/shared/infra/prisma/prisma-client';
@@ -65,7 +63,6 @@ describe('Update publication controller', () => {
     const publicationId = responseCreate.body.id;
 
     const updateData = {
-      id: publicationId,
       name: 'new string',
       description: undefined,
       category: undefined,
@@ -135,5 +132,75 @@ describe('Update publication controller', () => {
 
     expect(response.statusCode).toBe(HTTPResponse.STATUS_CODE.BAD_REQUEST);
     expect(response.body.message).toBe('Publication does not exists');
+  });
+
+  it('should not be able to update a publication of another user', async () => {
+    const anotherUserData = User.create({
+      name: 'Test name 2',
+      email: 'test2@test.com.br',
+      password: '12345',
+      phoneNumber: '123456780',
+    });
+
+    const anotherUserCreationResponse = await request(app).post('/users').send(anotherUserData);
+
+    const responseToken = await request(app).post('/sessions/login').send({
+      email: anotherUserData.email,
+      password: anotherUserData.password,
+    });
+
+    const anotherUserAccessToken = responseToken.body.accessToken;
+    const anotherUserId = anotherUserCreationResponse.body.id;
+
+    const publicationData = {
+      authorId: anotherUserId,
+      name: 'string',
+      description: 'string',
+      category: 'string',
+      gender: 'string',
+      breed: 'string',
+      weightInGrams: 14,
+      ageInYears: 23,
+      zipCode: 'string',
+      city: 'string',
+      state: 'string',
+      isArchived: true,
+      hidePhoneNumber: false,
+      characteristics: [],
+    };
+    const responseCreate = await request(app)
+      .post(URL)
+      .send(publicationData)
+      .set({
+        Authorization: `Bearer ${anotherUserAccessToken}`,
+      });
+
+    const publicationId = responseCreate.body.id;
+
+    const updateData = {
+      name: 'new string',
+      description: undefined,
+      category: undefined,
+      gender: 'new string',
+      breed: undefined,
+      weightInGrams: undefined,
+      ageInYears: 12,
+      zipCode: 'new string',
+      city: undefined,
+      state: undefined,
+      isArchived: false,
+      hidePhoneNumber: undefined,
+      characteristics: undefined,
+    };
+
+    const response = await request(app)
+      .patch(`${URL}/${publicationId}`)
+      .send(updateData)
+      .set({
+        Authorization: `Bearer ${accessToken}`,
+      });
+
+    expect(response.statusCode).toBe(HTTPResponse.STATUS_CODE.FORBIDDEN);
+    expect(response.body.message).toBe("User isn't publication author");
   });
 });
