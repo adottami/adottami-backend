@@ -1,6 +1,7 @@
 import Characteristic from '@/modules/publications/entities/characteristic';
 import Publication from '@/modules/publications/entities/publication';
 import User from '@/modules/users/entities/user';
+import NotFoundHTTPError from '@/shared/infra/http/errors/not-found-http-error';
 
 import Image from '../../entities/image';
 import PublicationRepository, { ParametersFindAll } from '../publication-repository';
@@ -97,11 +98,11 @@ class PublicationRepositoryMock implements PublicationRepository {
     return publication || null;
   }
 
-  async update(id: string, publication: Publication): Promise<Publication | null> {
+  async update(id: string, publication: Publication): Promise<Publication> {
     const publicationIndex = this.publications.findIndex((publication) => publication.id === id);
 
     if (publicationIndex === -1) {
-      return null;
+      throw new NotFoundHTTPError('Publication not found');
     }
 
     this.publications[publicationIndex] = publication;
