@@ -4,7 +4,6 @@ import Publication from '@/modules/publications/entities/publication';
 import PublicationRepository, {
   ParametersFindAll,
   UpdatePublication,
-  // eslint-disable-next-line import/no-named-as-default, import/no-named-as-default-member
 } from '@/modules/publications/repositories/publication-repository';
 import User from '@/modules/users/entities/user';
 import prisma from '@/shared/infra/prisma/prisma-client';

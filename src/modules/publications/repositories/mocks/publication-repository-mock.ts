@@ -3,7 +3,6 @@ import Publication from '@/modules/publications/entities/publication';
 import User from '@/modules/users/entities/user';
 
 import Image from '../../entities/image';
-// eslint-disable-next-line import/no-named-as-default, import/no-named-as-default-member
 import PublicationRepository, { ParametersFindAll } from '../publication-repository';
 
 class PublicationRepositoryMock implements PublicationRepository {
@@ -98,8 +97,12 @@ class PublicationRepositoryMock implements PublicationRepository {
     return publication || null;
   }
 
-  async update(id: string, publication: Publication): Promise<Publication> {
+  async update(id: string, publication: Publication): Promise<Publication | null> {
     const publicationIndex = this.publications.findIndex((publication) => publication.id === id);
+
+    if (publicationIndex === -1) {
+      return null;
+    }
 
     this.publications[publicationIndex] = publication;
 

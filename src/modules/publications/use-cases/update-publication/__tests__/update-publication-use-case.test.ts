@@ -8,8 +8,8 @@ import UserRepository from '@/modules/users/repositories/user-repository';
 import CreateUserUseCase from '@/modules/users/use-cases/create-user/create-user-use-case';
 import HashProvider from '@/shared/container/providers/hash-provider/hash-provider';
 import HashProviderMock from '@/shared/container/providers/hash-provider/mocks/hash-provider-mock';
-import BadRequestHTTPError from '@/shared/infra/http/errors/bad-request-http-error';
 import ForbiddenHTTPError from '@/shared/infra/http/errors/forbidden-http-error';
+import NotFoundHTTPError from '@/shared/infra/http/errors/not-found-http-error';
 
 import CreatePublicationUseCase from '../../create-publication/create-publication-use-case';
 import UpdatePublicationUseCase from '../update-publication-use-case';
@@ -129,7 +129,7 @@ describe('Update publication use case', () => {
       characteristics: undefined,
     };
 
-    await expect(useCase.execute(updateData)).rejects.toEqual(new BadRequestHTTPError('Publication does not exists'));
+    await expect(useCase.execute(updateData)).rejects.toEqual(new NotFoundHTTPError('Publication not found'));
   });
 
   it('should not be able to update a publication of another user', async () => {

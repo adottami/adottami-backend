@@ -130,8 +130,8 @@ describe('Update publication controller', () => {
         Authorization: `Bearer ${accessToken}`,
       });
 
-    expect(response.statusCode).toBe(HTTPResponse.STATUS_CODE.BAD_REQUEST);
-    expect(response.body.message).toBe('Publication does not exists');
+    expect(response.statusCode).toBe(HTTPResponse.STATUS_CODE.NOT_FOUND);
+    expect(response.body.message).toBe('Publication not found');
   });
 
   it('should not be able to update a publication of another user', async () => {

@@ -6,6 +6,7 @@ import CharacteristicRepository from '@/modules/publications/repositories/charac
 import PublicationRepository from '@/modules/publications/repositories/publication-repository';
 import BadRequestHTTPError from '@/shared/infra/http/errors/bad-request-http-error';
 import ForbiddenHTTPError from '@/shared/infra/http/errors/forbidden-http-error';
+import NotFoundHTTPError from '@/shared/infra/http/errors/not-found-http-error';
 import UseCaseService from '@/shared/use-cases/use-case-service';
 
 interface UpdatePublicationRequest {
@@ -27,7 +28,7 @@ interface UpdatePublicationRequest {
 }
 
 @injectable()
-class UpdatePublicationUseCase implements UseCaseService<UpdatePublicationRequest, Publication | null> {
+class UpdatePublicationUseCase implements UseCaseService<UpdatePublicationRequest, Publication> {
   constructor(
     @inject('PublicationRepository')
     private publicationRepository: PublicationRepository,
@@ -52,11 +53,11 @@ class UpdatePublicationUseCase implements UseCaseService<UpdatePublicationReques
     isArchived,
     hidePhoneNumber,
     characteristics,
-  }: UpdatePublicationRequest): Promise<Publication | null> {
+  }: UpdatePublicationRequest): Promise<Publication> {
     const publication = await this.publicationRepository.findById(publicationId);
 
     if (!publication) {
-      throw new BadRequestHTTPError('Publication does not exists');
+      throw new NotFoundHTTPError('Publication not found');
     }
 
     if (publication.author.id !== userId) {
@@ -96,7 +97,11 @@ class UpdatePublicationUseCase implements UseCaseService<UpdatePublicationReques
       Publication.create(publicationData),
     );
 
-    return updatedPublication || null;
+    if (!updatedPublication) {
+      throw new NotFoundHTTPError('Publication not found');
+    }
+
+    return updatedPublication;
   }
 }
 
