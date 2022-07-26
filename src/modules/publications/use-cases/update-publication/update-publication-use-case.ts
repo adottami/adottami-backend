@@ -3,7 +3,9 @@ import { injectable, inject } from 'tsyringe';
 import Characteristic from '@/modules/publications/entities/characteristic';
 import Publication from '@/modules/publications/entities/publication';
 import CharacteristicRepository from '@/modules/publications/repositories/characteristic-repository';
-import PublicationRepository, { UpdatePublication } from '@/modules/publications/repositories/publication-repository';
+import PublicationRepository, {
+  UpdatePublicationData,
+} from '@/modules/publications/repositories/publication-repository';
 import BadRequestHTTPError from '@/shared/infra/http/errors/bad-request-http-error';
 import ForbiddenHTTPError from '@/shared/infra/http/errors/forbidden-http-error';
 import NotFoundHTTPError from '@/shared/infra/http/errors/not-found-http-error';
@@ -75,7 +77,7 @@ class UpdatePublicationUseCase implements UseCaseService<UpdatePublicationReques
       }
     }
 
-    const publicationData: UpdatePublication = {
+    const updateData: UpdatePublicationData = {
       ...publication,
       name: name !== undefined ? name : publication.name,
       description: description !== undefined ? description : publication.description,
@@ -95,7 +97,7 @@ class UpdatePublicationUseCase implements UseCaseService<UpdatePublicationReques
           : publication.characteristics.map((characteristic) => ({ id: characteristic.id })),
     };
 
-    const updatedPublication = await this.publicationRepository.update(publicationId, publicationData);
+    const updatedPublication = await this.publicationRepository.update(publicationId, updateData);
 
     if (!updatedPublication) {
       throw new NotFoundHTTPError('Publication not found');

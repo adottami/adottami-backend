@@ -3,7 +3,7 @@ import Image from '@/modules/publications/entities/image';
 import Publication from '@/modules/publications/entities/publication';
 import PublicationRepository, {
   ParametersFindAll,
-  UpdatePublication,
+  UpdatePublicationData,
 } from '@/modules/publications/repositories/publication-repository';
 import User from '@/modules/users/entities/user';
 import prisma from '@/shared/infra/prisma/prisma-client';
@@ -159,7 +159,7 @@ class PrismaPublicationRepository implements PublicationRepository {
       isArchived,
       hidePhoneNumber,
       characteristics,
-    }: UpdatePublication,
+    }: UpdatePublicationData,
   ): Promise<Publication | null> {
     await prisma.publication.update({
       where: { id },
