@@ -104,6 +104,11 @@ class PublicationRepositoryMock implements PublicationRepository {
 
     this.publications[publicationIndex] = newPublication;
   }
+
+  async delete(id: string): Promise<void> {
+    const publicationIndex = this.publications.findIndex((publication) => publication.id === id);
+    this.publications.splice(publicationIndex);
+  }
 }
 
 export default PublicationRepositoryMock;

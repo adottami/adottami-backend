@@ -18,6 +18,7 @@ interface PublicationRepository {
   findAll(parameters: ParametersFindAll): Promise<Publication[]>;
   findById(id: string): Promise<Publication | null>;
   updateImages(id: string, newImages: Image[]): Promise<void>;
+  delete(id: string): Promise<void>;
 }
 
 export default PublicationRepository;

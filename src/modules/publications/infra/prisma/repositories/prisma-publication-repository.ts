@@ -139,6 +139,10 @@ class PrismaPublicationRepository implements PublicationRepository {
       data: newImages.map((image) => ({ id: image.id, url: image.url, publicationId })),
     });
   }
+
+  async delete(id: string): Promise<void> {
+    await prisma.publication.delete({ where: { id } });
+  }
 }
 
 export default PrismaPublicationRepository;

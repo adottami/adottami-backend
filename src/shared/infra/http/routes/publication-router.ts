@@ -5,6 +5,7 @@ import EditImagesController from '@/modules/publications/use-cases/edit-images/e
 import GetPublicationController from '@/modules/publications/use-cases/get-publication/get-publication-controller';
 import GetPublicationsController from '@/modules/publications/use-cases/get-publications/get-publications-controller';
 import ListCharacterisctsController from '@/modules/publications/use-cases/list-characteristics/list-characteristics-controller';
+import RemovePublicationController from '@/modules/publications/use-cases/remove-publication/remove-publication-controller';
 
 import ensureAuthenticated from '../middlewares/ensure-authenticated';
 import fileUpload from '../middlewares/file-upload';
@@ -37,5 +38,8 @@ publicationRouter.patch(
   }),
   editImagesController.handle,
 );
+
+const removePublicationController = new RemovePublicationController();
+publicationRouter.delete('/:id', ensureAuthenticated, removePublicationController.handle);
 
 export default publicationRouter;
