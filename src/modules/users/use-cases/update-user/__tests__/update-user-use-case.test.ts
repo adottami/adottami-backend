@@ -43,6 +43,34 @@ describe('Update user use case', () => {
     expect(userUpdated.phoneNumber).toEqual(userUpdateData.phoneNumber);
   });
 
+  it('should be able to update user keeping the same email', async () => {
+    const userCreateData = User.create({
+      name: 'Test name',
+      email: 'test@test.com.br',
+      password: '1234',
+      phoneNumber: '123456789',
+    });
+
+    const userCreated = await userRepository.create(userCreateData);
+
+    const userUpdateData = {
+      name: 'New test name',
+      email: userCreateData.email,
+      phoneNumber: '987654321',
+    };
+
+    const userUpdated = await useCase.execute({ id: userCreated.id, ...userUpdateData });
+
+    expect(userUpdated).toBeInstanceOf(User);
+    expect(userUpdated).toHaveProperty('id');
+    expect(userUpdated).toHaveProperty('createdAt');
+    expect(userUpdated.id).toBe(userCreated.id);
+    expect(userUpdated.name).toBe(userUpdateData.name);
+    expect(userUpdated.email).toBe(userUpdateData.email);
+    expect(userUpdated.password).toBe(userCreated.password);
+    expect(userUpdated.phoneNumber).toEqual(userUpdateData.phoneNumber);
+  });
+
   it('should not be able to update unregistered user', async () => {
     const userCreateData = User.create({
       name: 'Test name',
