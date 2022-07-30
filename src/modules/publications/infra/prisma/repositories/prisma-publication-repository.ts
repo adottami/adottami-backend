@@ -1,7 +1,10 @@
 import Characteristic from '@/modules/publications/entities/characteristic';
 import Image from '@/modules/publications/entities/image';
 import Publication from '@/modules/publications/entities/publication';
-import PublicationRepository, { ParametersFindAll } from '@/modules/publications/repositories/publication-repository';
+import PublicationRepository, {
+  ParametersFindAll,
+  UpdatePublicationData,
+} from '@/modules/publications/repositories/publication-repository';
 import User from '@/modules/users/entities/user';
 import prisma from '@/shared/infra/prisma/prisma-client';
 
@@ -138,6 +141,48 @@ class PrismaPublicationRepository implements PublicationRepository {
     await prisma.image.createMany({
       data: newImages.map((image) => ({ id: image.id, url: image.url, publicationId })),
     });
+  }
+
+  async update(
+    id: string,
+    {
+      name,
+      description,
+      category,
+      gender,
+      breed,
+      weightInGrams,
+      ageInYears,
+      zipCode,
+      city,
+      state,
+      isArchived,
+      hidePhoneNumber,
+      characteristics,
+    }: UpdatePublicationData,
+  ): Promise<Publication | null> {
+    await prisma.publication.update({
+      where: { id },
+      data: {
+        name: name !== undefined ? name : undefined,
+        description: description !== undefined ? description : undefined,
+        category: category !== undefined ? category : undefined,
+        gender: gender !== undefined ? gender : undefined,
+        breed: breed !== undefined ? breed : undefined,
+        weightInGrams: weightInGrams !== undefined ? weightInGrams : undefined,
+        ageInYears: ageInYears !== undefined ? ageInYears : undefined,
+        zipCode: zipCode !== undefined ? zipCode : undefined,
+        city: city !== undefined ? city : undefined,
+        state: state !== undefined ? state : undefined,
+        isArchived: isArchived !== undefined ? isArchived : undefined,
+        hidePhoneNumber: hidePhoneNumber !== undefined ? hidePhoneNumber : undefined,
+        characteristics: characteristics !== undefined ? { set: characteristics } : undefined,
+      },
+    });
+
+    const updatedPublication = await this.findById(id);
+
+    return updatedPublication;
   }
 
   async delete(id: string): Promise<void> {

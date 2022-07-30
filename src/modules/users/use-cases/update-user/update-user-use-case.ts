@@ -21,25 +21,25 @@ class UpdateUserUseCase implements UseCaseService<UpdateUserRequest, User> {
   ) {}
 
   async execute({ id, name, email, phoneNumber }: UpdateUserRequest): Promise<User> {
-    const userById = await this.userRepository.findById(id);
+    const user = await this.userRepository.findById(id);
 
-    if (!userById) {
+    if (!user) {
       throw new NotFoundHTTPError('User does not exists');
     }
 
-    const emailExists = await this.userRepository.findByEmail(email);
+    const userWithExistingEmail = await this.userRepository.findByEmail(email);
 
-    if (emailExists) {
+    if (userWithExistingEmail && userWithExistingEmail.id !== user.id) {
       throw new BadRequestHTTPError('E-mail already registered');
     }
 
-    const user = await this.userRepository.update(id, {
+    const updatedUser = await this.userRepository.update(id, {
       name,
       email,
       phoneNumber,
     });
 
-    return user;
+    return updatedUser;
   }
 }
 

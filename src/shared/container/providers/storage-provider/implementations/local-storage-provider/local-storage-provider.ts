@@ -10,7 +10,8 @@ class LocalStorageProvider implements StorageProvider {
     const absoluteFilePath = this.getAbsoluteFilePath(fileId);
 
     await this.initializeLocalStorageFolder();
-    await fs.rename(filePath, absoluteFilePath);
+    await fs.copy(filePath, absoluteFilePath);
+    await fs.remove(filePath);
 
     return {
       id: fileId,

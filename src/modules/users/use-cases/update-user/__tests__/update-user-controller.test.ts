@@ -61,6 +61,29 @@ describe('Update user controller', () => {
     expect(response.body.phoneNumber).toBe(userDataUpdate.phoneNumber);
   });
 
+  it('should be able to update user keeping the same email', async () => {
+    const userDataUpdate = {
+      name: 'New test name',
+      email: userData.email,
+      phoneNumber: '987654321',
+    };
+
+    const response = await request(app)
+      .put(`${URL}/${userId}`)
+      .send(userDataUpdate)
+      .set({
+        Authorization: `Bearer ${accessToken}`,
+      });
+
+    expect(response.statusCode).toEqual(HTTPResponse.STATUS_CODE.OK);
+    expect(response.body).toHaveProperty('id');
+    expect(response.body).toHaveProperty('createdAt');
+    expect(response.body.name).toBe(userDataUpdate.name);
+    expect(response.body.email).toBe(userDataUpdate.email);
+    expect(response.body).not.toHaveProperty('password');
+    expect(response.body.phoneNumber).toBe(userDataUpdate.phoneNumber);
+  });
+
   it('should not be able to update unregistered user', async () => {
     const tokenProvider = container.resolve<TokenProvider>('TokenProvider');
 

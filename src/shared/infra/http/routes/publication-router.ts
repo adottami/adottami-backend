@@ -6,6 +6,7 @@ import GetPublicationController from '@/modules/publications/use-cases/get-publi
 import GetPublicationsController from '@/modules/publications/use-cases/get-publications/get-publications-controller';
 import ListCharacterisctsController from '@/modules/publications/use-cases/list-characteristics/list-characteristics-controller';
 import RemovePublicationController from '@/modules/publications/use-cases/remove-publication/remove-publication-controller';
+import UpdatePublicationController from '@/modules/publications/use-cases/update-publication/update-publication-controller';
 
 import ensureAuthenticated from '../middlewares/ensure-authenticated';
 import fileUpload from '../middlewares/file-upload';
@@ -23,6 +24,9 @@ publicationRouter.get('/', getPublicationsController.handle);
 
 const getPublicationController = new GetPublicationController();
 publicationRouter.get('/:id', ensureAuthenticated, getPublicationController.handle);
+
+const updatePublicationController = new UpdatePublicationController();
+publicationRouter.patch('/:id', ensureAuthenticated, updatePublicationController.handle);
 
 const editImagesController = new EditImagesController();
 publicationRouter.patch(

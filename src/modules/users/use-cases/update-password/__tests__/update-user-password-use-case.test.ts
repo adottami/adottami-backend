@@ -5,7 +5,7 @@ import HashProvider from '@/shared/container/providers/hash-provider/hash-provid
 import HashProviderMock from '@/shared/container/providers/hash-provider/mocks/hash-provider-mock';
 import BadRequestHTTPError from '@/shared/infra/http/errors/bad-request-http-error';
 
-import UpdateUserPasswordUseCase from '../update-user-password-case';
+import UpdateUserPasswordUseCase from '../update-user-password-use-case';
 
 describe('Update user password use case', () => {
   let userRepository: UserRepository;
