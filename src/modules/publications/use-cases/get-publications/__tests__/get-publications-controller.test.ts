@@ -10,7 +10,7 @@ import app from '@/shared/infra/http/app';
 import HTTPResponse from '@/shared/infra/http/models/http-response';
 import prisma from '@/shared/infra/prisma/prisma-client';
 
-import { getNameNumberList, getNumPublications } from './util';
+import { getNameNumberList } from './util';
 
 describe('Get publications controller', () => {
   const URL = '/publications';
@@ -91,12 +91,11 @@ describe('Get publications controller', () => {
       authorId: '',
       page: 1,
       perPage: 20,
-      orderBy: '',
     });
 
     expect(publicationsResponse.statusCode).toEqual(HTTPResponse.STATUS_CODE.OK);
     expect(publicationsResponse.body).toHaveLength(numPublications.length);
-    expect(getNameNumberList(publicationsResponse.body)).toEqual(numPublications);
+    expect(getNameNumberList(publicationsResponse.body)).toEqual(expect.arrayContaining(numPublications));
   });
 
   it('should return an empty array if the city and state filter does not match', async () => {
@@ -120,7 +119,6 @@ describe('Get publications controller', () => {
       authorId: '',
       page: 1,
       perPage: 20,
-      orderBy: '',
     });
 
     expect(publicationsResponse.statusCode).toEqual(HTTPResponse.STATUS_CODE.OK);
@@ -163,12 +161,11 @@ describe('Get publications controller', () => {
         authorId: '',
         page: 1,
         perPage: 20,
-        orderBy: '',
       });
 
     expect(publicationsResponse.statusCode).toEqual(HTTPResponse.STATUS_CODE.OK);
     expect(publicationsResponse.body).toHaveLength(numPublications.length);
-    expect(getNameNumberList(publicationsResponse.body)).toEqual(numPublications);
+    expect(getNameNumberList(publicationsResponse.body)).toEqual(expect.arrayContaining(numPublications));
   });
 
   it('should be able to get the publications by filtering by city and state and isArchived', async () => {
@@ -204,7 +201,6 @@ describe('Get publications controller', () => {
       authorId: '',
       page: 1,
       perPage: 20,
-      orderBy: '',
     });
 
     const publicationsIsArchivedFalseResponse = await request(app).get(URL).query({
@@ -215,15 +211,16 @@ describe('Get publications controller', () => {
       authorId: '',
       page: 1,
       perPage: 20,
-      orderBy: '',
     });
 
     expect(publicationsIsArchivedTrueResponse.statusCode).toEqual(HTTPResponse.STATUS_CODE.OK);
     expect(publicationsIsArchivedTrueResponse.body).toHaveLength(numPublications.length);
-    expect(getNameNumberList(publicationsIsArchivedTrueResponse.body)).toEqual(numPublications);
+    expect(getNameNumberList(publicationsIsArchivedTrueResponse.body)).toEqual(expect.arrayContaining(numPublications));
     expect(publicationsIsArchivedFalseResponse.statusCode).toEqual(HTTPResponse.STATUS_CODE.OK);
     expect(publicationsIsArchivedFalseResponse.body).toHaveLength(numPublicationsOther.length);
-    expect(getNameNumberList(publicationsIsArchivedFalseResponse.body)).toEqual(numPublicationsOther);
+    expect(getNameNumberList(publicationsIsArchivedFalseResponse.body)).toEqual(
+      expect.arrayContaining(numPublicationsOther),
+    );
   });
 
   it('should be able to get the publications by filtering by city and state and authorId', async () => {
@@ -276,12 +273,11 @@ describe('Get publications controller', () => {
       authorId: otherUser.id,
       page: 1,
       perPage: 20,
-      orderBy: '',
     });
 
     expect(publications.statusCode).toEqual(HTTPResponse.STATUS_CODE.OK);
     expect(publications.body).toHaveLength(numPublications.length);
-    expect(getNameNumberList(publications.body)).toEqual(numPublications);
+    expect(getNameNumberList(publications.body)).toEqual(expect.arrayContaining(numPublications));
   });
 
   it('should be able to get the publications by filtering by city and state using pagination', async () => {
@@ -327,7 +323,7 @@ describe('Get publications controller', () => {
       authorId: '',
       page,
       perPage,
-      orderBy: 'name',
+      orderBy: 'most-recently-created',
     });
 
     const publicationsPage2Response = await request(app)
@@ -340,7 +336,7 @@ describe('Get publications controller', () => {
         authorId: '',
         page: page + 1,
         perPage,
-        orderBy: 'name',
+        orderBy: 'most-recently-created',
       });
 
     const publicationsPage4Response = await request(app)
@@ -353,7 +349,7 @@ describe('Get publications controller', () => {
         authorId: '',
         page: page + 3,
         perPage,
-        orderBy: 'name',
+        orderBy: 'most-recently-created',
       });
 
     const publicationsPage15Response = await request(app)
@@ -366,15 +362,15 @@ describe('Get publications controller', () => {
         authorId: '',
         page: page + 14,
         perPage,
-        orderBy: 'name',
+        orderBy: 'most-recently-created',
       });
 
     expect(publicationsPage1Response.statusCode).toEqual(HTTPResponse.STATUS_CODE.OK);
-    expect(getNameNumberList(publicationsPage1Response.body)).toEqual(getNumPublications(perPage, page));
+    expect(getNameNumberList(publicationsPage1Response.body)).toEqual([24, 23, 22, 21, 20]);
     expect(publicationsPage2Response.statusCode).toEqual(HTTPResponse.STATUS_CODE.OK);
-    expect(getNameNumberList(publicationsPage2Response.body)).toEqual(getNumPublications(perPage, page + 1));
+    expect(getNameNumberList(publicationsPage2Response.body)).toEqual([19, 18, 17, 16, 15]);
     expect(publicationsPage4Response.statusCode).toEqual(HTTPResponse.STATUS_CODE.OK);
-    expect(getNameNumberList(publicationsPage4Response.body)).toEqual(getNumPublications(perPage, page + 3));
+    expect(getNameNumberList(publicationsPage4Response.body)).toEqual([9, 8, 7, 6, 5]);
     expect(publicationsPage15Response.statusCode).toEqual(HTTPResponse.STATUS_CODE.OK);
     expect(publicationsPage15Response.body).toHaveLength(0);
     expect(publicationsPage15Response.body).toEqual([]);
@@ -407,7 +403,7 @@ describe('Get publications controller', () => {
       authorId: '',
       page: 1,
       perPage,
-      orderBy: 'name',
+      orderBy: 'most-recently-created',
     });
 
     expect(publicationsOrderByNameResponse.statusCode).toEqual(HTTPResponse.STATUS_CODE.OK);
@@ -437,7 +433,6 @@ describe('Get publications controller', () => {
       authorId: '',
       page: 1,
       perPage: totalPublications,
-      orderBy: '',
     });
 
     expect(publicationsResponse.statusCode).toEqual(HTTPResponse.STATUS_CODE.OK);
@@ -469,7 +464,6 @@ describe('Get publications controller', () => {
       authorId: '',
       page: 1,
       perPage: totalPublications,
-      orderBy: '',
     });
 
     expect(publicationsResponse.statusCode).toEqual(HTTPResponse.STATUS_CODE.OK);

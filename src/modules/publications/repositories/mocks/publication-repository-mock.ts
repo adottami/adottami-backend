@@ -74,9 +74,9 @@ class PublicationRepositoryMock implements PublicationRepository {
     );
 
     const publicationsOrderByAndPage = publications
-      .sort((a, b) => {
-        if (orderBy === 'createdAt') {
-          return a.createdAt.getTime() - b.createdAt.getTime();
+      .sort((publication, otherPublication) => {
+        if (orderBy === 'most-recently-created') {
+          return otherPublication.createdAt.getTime() - publication.createdAt.getTime();
         }
         return 0;
       })

@@ -2,15 +2,17 @@ import Publication from '@/modules/publications/entities/publication';
 
 import Image from '../entities/image';
 
+export type OrderBy = 'most-recently-created';
+
 export interface ParametersFindAll {
-  city: string;
-  state: string;
+  city?: string;
+  state?: string;
   categories?: string[];
   isArchived?: boolean;
   authorId?: string;
   page?: number;
   perPage: number;
-  orderBy?: string;
+  orderBy?: OrderBy;
 }
 
 export interface UpdatePublicationData {
