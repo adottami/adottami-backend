@@ -66,7 +66,6 @@ describe('Get publications use case', () => {
       authorId: '',
       page: 1,
       perPage: 20,
-      orderBy: '',
     });
 
     expect(publications).toHaveLength(numPublications.length);
@@ -86,7 +85,6 @@ describe('Get publications use case', () => {
       authorId: '',
       page: 1,
       perPage: 20,
-      orderBy: '',
     });
 
     expect(publications).toHaveLength(0);
@@ -118,7 +116,6 @@ describe('Get publications use case', () => {
       authorId: '',
       page: 1,
       perPage: 20,
-      orderBy: '',
     });
 
     expect(publications).toHaveLength(numPublications.length);
@@ -147,7 +144,6 @@ describe('Get publications use case', () => {
       authorId: '',
       page: 1,
       perPage: 20,
-      orderBy: '',
     });
 
     const publicationsIsArchivedFalse = await useCase.execute({
@@ -158,7 +154,6 @@ describe('Get publications use case', () => {
       authorId: '',
       page: 1,
       perPage: 20,
-      orderBy: '',
     });
 
     expect(publicationsIsArchivedTrue).toHaveLength(numPublications.length);
@@ -198,7 +193,6 @@ describe('Get publications use case', () => {
       authorId: otherUser.id,
       page: 1,
       perPage: 20,
-      orderBy: '',
     });
 
     expect(publications).toHaveLength(numPublications.length);
@@ -222,7 +216,6 @@ describe('Get publications use case', () => {
       authorId: '',
       page,
       perPage,
-      orderBy: '',
     });
 
     const publicationsPage2 = await useCase.execute({
@@ -233,7 +226,6 @@ describe('Get publications use case', () => {
       authorId: '',
       page: page + 1,
       perPage,
-      orderBy: '',
     });
 
     const publicationsPage4 = await useCase.execute({
@@ -244,7 +236,6 @@ describe('Get publications use case', () => {
       authorId: '',
       page: page + 3,
       perPage,
-      orderBy: '',
     });
 
     const publicationsPage15 = await useCase.execute({
@@ -255,7 +246,6 @@ describe('Get publications use case', () => {
       authorId: '',
       page: page + 14,
       perPage,
-      orderBy: '',
     });
 
     expect(publicationsPage1).toHaveLength(perPage);
@@ -269,7 +259,7 @@ describe('Get publications use case', () => {
   });
 
   it('should get the publications by filtering by city and state and sorting by creatdAt', async () => {
-    const numPublications = [2, 3, 4, 8];
+    const numPublications = [3, 2, 1, 0];
 
     for (let i = 0; i < 20; i++) {
       const modifyPublication = { ...publication, name: `publication_${i}` };
@@ -290,9 +280,9 @@ describe('Get publications use case', () => {
       categories: '',
       isArchived: false,
       authorId: '',
-      page: 5,
+      page: 0,
       perPage: 4,
-      orderBy: 'createdAt',
+      orderBy: 'most-recently-created',
     });
 
     expect(publications).toHaveLength(numPublications.length);
@@ -316,7 +306,7 @@ describe('Get publications use case', () => {
       authorId: '',
       page: 1,
       perPage: totalPublications,
-      orderBy: 'createdAt',
+      orderBy: 'most-recently-created',
     });
 
     expect(publications).toHaveLength(5);
@@ -342,7 +332,7 @@ describe('Get publications use case', () => {
       authorId: '',
       page: 1,
       perPage: totalPublications,
-      orderBy: 'createdAt',
+      orderBy: 'most-recently-created',
     });
 
     expect(publications).toHaveLength(5);

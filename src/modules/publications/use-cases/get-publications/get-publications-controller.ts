@@ -5,6 +5,7 @@ import HTTPResponse from '@/shared/infra/http/models/http-response';
 import UseCaseController from '@/shared/use-cases/use-case-controller';
 
 import Publication from '../../entities/publication';
+import { OrderBy } from '../../repositories/publication-repository';
 import GetPublicationsUseCase from './get-publications-use-case';
 
 class GetPublicationsController implements UseCaseController {
@@ -14,14 +15,14 @@ class GetPublicationsController implements UseCaseController {
     const getPublicationsUseCase = container.resolve(GetPublicationsUseCase);
 
     const publications = await getPublicationsUseCase.execute({
-      city: city as string,
-      state: state as string,
-      categories: categories as string,
+      city: city as string | undefined,
+      state: state as string | undefined,
+      categories: categories as string | undefined,
       isArchived: isArchived === 'true',
-      authorId: authorId as string,
-      page: parseInt(page as string),
-      perPage: parseInt(perPage as string),
-      orderBy: orderBy as string,
+      authorId: authorId as string | undefined,
+      page: page === undefined ? undefined : parseInt(page as string),
+      perPage: perPage === undefined ? undefined : parseInt(perPage as string),
+      orderBy: orderBy as OrderBy | undefined,
     });
 
     const publicationsJson = Publication.manyToJson(publications);

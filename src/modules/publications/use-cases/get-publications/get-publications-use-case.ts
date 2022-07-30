@@ -1,19 +1,19 @@
 import { inject, injectable } from 'tsyringe';
 
 import Publication from '@/modules/publications/entities/publication';
-import PublicationRepository from '@/modules/publications/repositories/publication-repository';
+import PublicationRepository, { OrderBy } from '@/modules/publications/repositories/publication-repository';
 import User from '@/modules/users/entities/user';
 import UseCaseService from '@/shared/use-cases/use-case-service';
 
 interface GetPublicationsRequest {
-  city: string;
-  state: string;
+  city?: string;
+  state?: string;
   categories?: string;
   isArchived?: boolean;
   authorId?: string;
   page?: number;
-  perPage: number;
-  orderBy?: string;
+  perPage?: number;
+  orderBy?: OrderBy;
 }
 
 @injectable()

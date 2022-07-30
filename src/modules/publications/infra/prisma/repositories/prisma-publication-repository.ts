@@ -89,7 +89,7 @@ class PrismaPublicationRepository implements PublicationRepository {
         isArchived: typeof isArchived !== undefined ? { equals: isArchived } : undefined,
         authorId: authorId ? { equals: authorId } : undefined,
       },
-      orderBy: orderBy ? [{ [orderBy]: 'asc' }] : undefined,
+      orderBy: orderBy === 'most-recently-created' ? { createdAt: 'desc' } : undefined,
       include: {
         author: true,
         characteristics: true,
