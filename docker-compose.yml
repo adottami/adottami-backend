@@ -1,0 +1,13 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:14.4
+    container_name: adottami-postgres
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: adottami-postgres
+      POSTGRES_PASSWORD: adottami-postgres
+      POSTGRES_DB: adottami

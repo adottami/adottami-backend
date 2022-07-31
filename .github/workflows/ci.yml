@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+
+jobs:
+  unit-and-integration-tests:
+    name: Unit and integration tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+
+    services:
+      postgres:
+        image: postgres:14.4
+        env:
+          POSTGRES_USER: adottami-postgres-ci
+          POSTGRES_PASSWORD: adottami-postgres-ci
+          POSTGRES_DB: adottami-ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      DATABASE_URL: postgresql://adottami-postgres-ci:adottami-postgres-ci@localhost:5432/adottami-ci
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: ${{ github.workspace }}/node_modules
+          key: ${{ runner.os }}-dependencies-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-dependencies-
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Set up database
+        run: yarn prisma migrate dev
+
+      - name: Check formatting style, lint code and check types
+        run: yarn concurrently 'yarn types:check' 'yarn lint . --max-warnings=0' 'yarn style:check .'
+
+      - name: Run tests
+        run: yarn test:ci
