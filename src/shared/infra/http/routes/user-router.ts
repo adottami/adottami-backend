@@ -15,6 +15,7 @@ userRouter.post('/', createUserController.handle);
 
 const updateUserPasswordController = new UpdateUserPasswordController();
 userRouter.patch('/:id/password', ensureAuthenticated, ensureConfirmUser, updateUserPasswordController.handle);
+
 const getUserController = new GetUserController();
 userRouter.get('/:id', ensureAuthenticated, ensureConfirmUser, getUserController.handle);
 

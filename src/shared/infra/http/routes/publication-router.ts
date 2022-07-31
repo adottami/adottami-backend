@@ -23,7 +23,7 @@ const getPublicationsController = new GetPublicationsController();
 publicationRouter.get('/', getPublicationsController.handle);
 
 const getPublicationController = new GetPublicationController();
-publicationRouter.get('/:id', ensureAuthenticated, getPublicationController.handle);
+publicationRouter.get('/:id', getPublicationController.handle);
 
 const updatePublicationController = new UpdatePublicationController();
 publicationRouter.patch('/:id', ensureAuthenticated, updatePublicationController.handle);
