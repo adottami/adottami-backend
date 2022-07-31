@@ -119,8 +119,7 @@ class PublicationRepositoryMock implements PublicationRepository {
   }
 
   async delete(id: string): Promise<void> {
-    const publicationIndex = this.publications.findIndex((publication) => publication.id === id);
-    this.publications.splice(publicationIndex);
+    this.publications = this.publications.filter((publication) => publication.id !== id);
   }
 }
 

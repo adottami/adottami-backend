@@ -1,8 +1,8 @@
 import { inject, injectable } from 'tsyringe';
 
 import StorageProvider from '@/shared/container/providers/storage-provider/storage-provider';
-import BadRequestHTTPError from '@/shared/infra/http/errors/bad-request-http-error';
 import ForbiddenHTTPError from '@/shared/infra/http/errors/forbidden-http-error';
+import NotFoundHTTPError from '@/shared/infra/http/errors/not-found-http-error';
 import UseCaseService from '@/shared/use-cases/use-case-service';
 
 import PublicationRepository from '../../repositories/publication-repository';
@@ -25,7 +25,7 @@ class RemovePublicationUseCase implements UseCaseService<RemovePublicationReques
     const publication = await this.publicationRepository.findById(id);
 
     if (!publication) {
-      throw new BadRequestHTTPError('Publication not found');
+      throw new NotFoundHTTPError('Publication not found');
     }
 
     if (publication.author.id !== userId) {
