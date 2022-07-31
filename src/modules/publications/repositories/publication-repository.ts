@@ -37,6 +37,7 @@ interface PublicationRepository {
   findById(id: string): Promise<Publication | null>;
   update(id: string, updateData: UpdatePublicationData): Promise<Publication | null>;
   updateImages(id: string, newImages: Image[]): Promise<void>;
+  delete(id: string): Promise<void>;
 }
 
 export default PublicationRepository;

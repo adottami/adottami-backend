@@ -49,7 +49,7 @@ model Image {
   url       String
   createdAt DateTime @default(now())
 
-  publication   Publication @relation(fields: [publicationId], references: [id])
+  publication   Publication @relation(fields: [publicationId], references: [id], onDelete: Cascade)
   publicationId String
 }
 

@@ -184,6 +184,10 @@ class PrismaPublicationRepository implements PublicationRepository {
 
     return updatedPublication;
   }
+
+  async delete(id: string): Promise<void> {
+    await prisma.publication.delete({ where: { id } });
+  }
 }
 
 export default PrismaPublicationRepository;
