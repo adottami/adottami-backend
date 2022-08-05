@@ -2,7 +2,7 @@ import Characteristic from '@/modules/publications/entities/characteristic';
 import Image from '@/modules/publications/entities/image';
 import Publication from '@/modules/publications/entities/publication';
 import PublicationRepository, {
-  ParametersFindAll,
+  FindAllPublicationFilters,
   UpdatePublicationData,
 } from '@/modules/publications/repositories/publication-repository';
 import User from '@/modules/users/entities/user';
@@ -71,20 +71,22 @@ class PrismaPublicationRepository implements PublicationRepository {
 
   async findAll({
     city,
+    ignoreCityCase,
     state,
+    ignoreStateCase,
     categories,
     isArchived,
     authorId,
     page,
     perPage,
     orderBy,
-  }: ParametersFindAll): Promise<Publication[]> {
+  }: FindAllPublicationFilters): Promise<Publication[]> {
     const allPublications = await prisma.publication.findMany({
       take: perPage,
       skip: page ? perPage * (page - 1) : 0,
       where: {
-        city: city ? { equals: city } : undefined,
-        state: state ? { equals: state } : undefined,
+        city: city ? { contains: city, mode: ignoreCityCase ? 'insensitive' : 'default' } : undefined,
+        state: state ? { contains: state, mode: ignoreStateCase ? 'insensitive' : 'default' } : undefined,
         category: categories ? { in: categories } : undefined,
         isArchived: typeof isArchived !== undefined ? { equals: isArchived } : undefined,
         authorId: authorId ? { equals: authorId } : undefined,
