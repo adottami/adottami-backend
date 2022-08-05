@@ -4,7 +4,7 @@
 
 import request from 'supertest';
 
-import PublicationRepositoryMock from '@/modules/publications/repositories/mocks/publication-repository-mock';
+import PrismaPublicationRepository from '@/modules/publications/infra/prisma/repositories/prisma-publication-repository';
 import PublicationRepository from '@/modules/publications/repositories/publication-repository';
 import User from '@/modules/users/entities/user';
 import app from '@/shared/infra/http/app';
@@ -36,7 +36,7 @@ describe('Remove publication controller', () => {
 
     accessToken = responseToken.body.accessToken;
     userId = userCreationResponse.body.id;
-    publicationRepository = new PublicationRepositoryMock();
+    publicationRepository = new PrismaPublicationRepository();
   });
 
   it('should be able to remove a publication', async () => {
