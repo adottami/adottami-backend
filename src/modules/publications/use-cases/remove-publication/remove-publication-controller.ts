@@ -14,7 +14,7 @@ class RemovePublicationController implements UseCaseController {
 
     await removePublicationUseCase.execute({ userId, id });
 
-    return new HTTPResponse(response).ok();
+    return new HTTPResponse(response).noContent();
   }
 }
 
