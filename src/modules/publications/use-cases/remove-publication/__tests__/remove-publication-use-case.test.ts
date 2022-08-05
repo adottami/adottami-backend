@@ -71,24 +71,23 @@ describe('Remove Publication Use Case', () => {
       images: [],
     };
     const publication = await publicationUseCase.execute(publicationData);
+
     expect(publication).toBeInstanceOf(Publication);
 
     const imageFilePath = await saveSampleImageToFileSystem();
-
     const updatedPublication = await editImagesUseCase.execute({
       userId: user.id,
       publicationId: publication.id,
       newFiles: [{ path: imageFilePath }] as Express.Multer.File[],
     });
-    const image = updatedPublication.images.at(0);
+    const image = updatedPublication.images[0];
 
-    if (image) {
-      await useCase.execute({
-        userId: user.id,
-        id: updatedPublication.id,
-      });
-      expect(await publicationRepository.findById(publication.id)).toBeNull();
-      expect(await imageRepository.findById(image.id)).toBeNull();
-    }
+    await useCase.execute({
+      userId: user.id,
+      id: updatedPublication.id,
+    });
+
+    expect(await publicationRepository.findById(publication.id)).toBeNull();
+    expect(await imageRepository.findById(image.id)).toBeNull();
   });
 });

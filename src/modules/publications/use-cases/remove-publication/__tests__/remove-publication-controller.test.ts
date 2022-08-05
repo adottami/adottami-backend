@@ -4,6 +4,8 @@
 
 import request from 'supertest';
 
+import PublicationRepositoryMock from '@/modules/publications/repositories/mocks/publication-repository-mock';
+import PublicationRepository from '@/modules/publications/repositories/publication-repository';
 import User from '@/modules/users/entities/user';
 import app from '@/shared/infra/http/app';
 import HTTPResponse from '@/shared/infra/http/models/http-response';
@@ -13,6 +15,7 @@ describe('Remove publication controller', () => {
   let accessToken: string;
   let userData: User;
   let userId: string;
+  let publicationRepository: PublicationRepository;
 
   beforeEach(async () => {
     await prisma.publication.deleteMany();
@@ -33,9 +36,10 @@ describe('Remove publication controller', () => {
 
     accessToken = responseToken.body.accessToken;
     userId = userCreationResponse.body.id;
+    publicationRepository = new PublicationRepositoryMock();
   });
 
-  it('should be able to edit images of the publication', async () => {
+  it('should be able to remove a publication', async () => {
     const publicationData = {
       author: userData,
       name: 'string',
@@ -73,5 +77,6 @@ describe('Remove publication controller', () => {
       });
 
     expect(removeResponse.statusCode).toBe(HTTPResponse.STATUS_CODE.NO_CONTENT);
+    expect(await publicationRepository.findById(createResponse.body.id)).toBeNull();
   });
 });
