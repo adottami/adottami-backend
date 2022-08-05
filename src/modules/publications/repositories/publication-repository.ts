@@ -4,9 +4,11 @@ import Image from '../entities/image';
 
 export type OrderBy = 'most-recently-created';
 
-export interface ParametersFindAll {
+export interface FindAllPublicationFilters {
   city?: string;
+  ignoreStateCase?: boolean;
   state?: string;
+  ignoreCityCase?: boolean;
   categories?: string[];
   isArchived?: boolean;
   authorId?: string;
@@ -33,7 +35,7 @@ export interface UpdatePublicationData {
 
 interface PublicationRepository {
   create(authorId: string, publication: Publication): Promise<Publication>;
-  findAll(parameters: ParametersFindAll): Promise<Publication[]>;
+  findAll(filters: FindAllPublicationFilters): Promise<Publication[]>;
   findById(id: string): Promise<Publication | null>;
   update(id: string, updateData: UpdatePublicationData): Promise<Publication | null>;
   updateImages(id: string, newImages: Image[]): Promise<void>;

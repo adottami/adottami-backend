@@ -5,9 +5,15 @@ import PublicationRepository, { OrderBy } from '@/modules/publications/repositor
 import User from '@/modules/users/entities/user';
 import UseCaseService from '@/shared/use-cases/use-case-service';
 
+const DEFAULT_IS_ARCHIVED = false;
+const DEFAULT_PAGE = 1;
+const DEFAULT_PER_PAGE = 20;
+
 interface GetPublicationsRequest {
   city?: string;
+  ignoreCityCase?: boolean;
   state?: string;
+  ignoreStateCase?: boolean;
   categories?: string;
   isArchived?: boolean;
   authorId?: string;
@@ -25,40 +31,38 @@ class GetPublicationsUseCase implements UseCaseService<GetPublicationsRequest, P
 
   async execute({
     city,
+    ignoreCityCase,
     state,
+    ignoreStateCase,
     categories,
-    isArchived,
+    isArchived = DEFAULT_IS_ARCHIVED,
     authorId,
-    page,
-    perPage,
+    page = DEFAULT_PAGE,
+    perPage = DEFAULT_PER_PAGE,
     orderBy,
   }: GetPublicationsRequest): Promise<Publication[]> {
-    const isArchivedDefault = false;
-    const pageDefault = 1;
-    const perPageDefault = 20;
-
-    const publications = await this.publicationRepository.findAll({
+    const basePublications = await this.publicationRepository.findAll({
       city,
+      ignoreCityCase,
       state,
+      ignoreStateCase,
       categories: categories ? categories.split(',') : undefined,
-      isArchived: typeof isArchived !== undefined ? isArchived : isArchivedDefault,
+      isArchived,
       authorId,
-      page: page || pageDefault,
-      perPage: perPage || perPageDefault,
+      page,
+      perPage,
       orderBy,
     });
 
-    const changedPublications = publications.map((publication) => {
-      if (publication.hidePhoneNumber) {
-        return Publication.create({
-          ...publication,
-          author: User.create({ ...publication.author, phoneNumber: undefined }),
-        });
+    const publications = basePublications.map((publication) => {
+      if (!publication.hidePhoneNumber) {
+        return publication;
       }
-      return publication;
+      const authorWithHiddenPhoneNumber = User.create({ ...publication.author, phoneNumber: undefined });
+      return Publication.create({ ...publication, author: authorWithHiddenPhoneNumber });
     });
 
-    return changedPublications;
+    return publications;
   }
 }
 

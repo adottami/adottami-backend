@@ -85,7 +85,50 @@ describe('Get publications controller', () => {
 
     const publicationsResponse = await request(app).get(URL).query({
       city: 'Campina Grande',
+      ignoreCityCase: 'false',
       state: 'PB',
+      ignoreStateCase: 'false',
+      categories: '',
+      isArchived: false,
+      authorId: '',
+      page: 1,
+      perPage: 20,
+    });
+
+    expect(publicationsResponse.statusCode).toEqual(HTTPResponse.STATUS_CODE.OK);
+    expect(publicationsResponse.body).toHaveLength(numPublications.length);
+    expect(getNameNumberList(publicationsResponse.body)).toEqual(expect.arrayContaining(numPublications));
+  });
+
+  it('should be able to get the publications by filtering by city and state ignoring case', async () => {
+    const numPublications = [2, 3, 4, 7];
+    const totalPublications = 8;
+
+    for (let i = 0; i < totalPublications; i++) {
+      const modifyPublication = { ...publicationData, name: `publication_${i}` };
+
+      if (numPublications.includes(i)) {
+        await request(app)
+          .post(URL)
+          .send({ ...modifyPublication, city: 'Campina Grande', state: 'PB' })
+          .set({
+            Authorization: `Bearer ${accessToken}`,
+          });
+      } else {
+        await request(app)
+          .post(URL)
+          .send(modifyPublication)
+          .set({
+            Authorization: `Bearer ${accessToken}`,
+          });
+      }
+    }
+
+    const publicationsResponse = await request(app).get(URL).query({
+      city: 'campina GRANDE',
+      ignoreCityCase: 'true',
+      state: 'pb',
+      ignoreStateCase: 'true',
       categories: '',
       isArchived: false,
       authorId: '',
