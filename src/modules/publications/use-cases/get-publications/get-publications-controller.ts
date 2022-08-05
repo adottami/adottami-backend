@@ -25,8 +25,18 @@ interface RequestQuery {
 
 class GetPublicationsController implements UseCaseController {
   async handle(request: Request, response: Response): Promise<Response> {
-    const { city, ignoreCityCase, state, ignoreStateCase, categories, isArchived, authorId, page, perPage, orderBy } =
-      request.query as RequestQuery;
+    const {
+      city,
+      ignoreCityCase = 'true',
+      state,
+      ignoreStateCase = 'true',
+      categories,
+      isArchived,
+      authorId,
+      page,
+      perPage,
+      orderBy,
+    }: RequestQuery = request.query;
 
     const getPublicationsUseCase = container.resolve(GetPublicationsUseCase);
 
