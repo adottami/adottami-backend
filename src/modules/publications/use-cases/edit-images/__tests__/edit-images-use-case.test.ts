@@ -14,7 +14,7 @@ import StorageProvider from '@/shared/container/providers/storage-provider/stora
 
 import CreatePublicationUseCase from '../../create-publication/create-publication-use-case';
 import EditImagesUseCase from '../edit-images-use-case';
-import { saveSampleImageToFileSystem } from './utils';
+import { saveImageToFileSystem } from './utils';
 
 describe('Edit Images Use Case', () => {
   let userRepository: UserRepository;
@@ -67,7 +67,7 @@ describe('Edit Images Use Case', () => {
     const publication = await publicationUseCase.execute(publicationData);
     expect(publication).toBeInstanceOf(Publication);
 
-    const imageFilePath = await saveSampleImageToFileSystem();
+    const imageFilePath = await saveImageToFileSystem('edit-images-use-case');
 
     const updatedPublication = await useCase.execute({
       userId: user.id,

@@ -14,7 +14,7 @@ import LocalStorageProvider from '@/shared/container/providers/storage-provider/
 import StorageProvider from '@/shared/container/providers/storage-provider/storage-provider';
 
 import CreatePublicationUseCase from '../../create-publication/create-publication-use-case';
-import { saveSampleImageToFileSystem } from '../../edit-images/__tests__/utils';
+import { saveImageToFileSystem } from '../../edit-images/__tests__/utils';
 import EditImagesUseCase from '../../edit-images/edit-images-use-case';
 import RemovePublicationUseCase from '../remove-publication-use-case';
 
@@ -74,7 +74,7 @@ describe('Remove Publication Use Case', () => {
 
     expect(publication).toBeInstanceOf(Publication);
 
-    const imageFilePath = await saveSampleImageToFileSystem();
+    const imageFilePath = await saveImageToFileSystem('remove-publication-use-case');
     const updatedPublication = await editImagesUseCase.execute({
       userId: user.id,
       publicationId: publication.id,
