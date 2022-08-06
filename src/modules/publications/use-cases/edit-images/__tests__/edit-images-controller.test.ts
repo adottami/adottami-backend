@@ -9,7 +9,7 @@ import app from '@/shared/infra/http/app';
 import HTTPResponse from '@/shared/infra/http/models/http-response';
 import prisma from '@/shared/infra/prisma/prisma-client';
 
-import { saveSampleImageToFileSystem } from './utils';
+import { saveImageToFileSystem } from './utils';
 
 describe('Edit images controller', () => {
   let accessToken: string;
@@ -67,7 +67,7 @@ describe('Edit images controller', () => {
     expect(createResponse.body).toHaveProperty('createdAt');
     expect(createResponse.body.author.id).toBe(userId);
 
-    const imageFilePath = await saveSampleImageToFileSystem();
+    const imageFilePath = await saveImageToFileSystem('edit-images-controller');
 
     const editResponse = await request(app)
       .patch(`/publications/${createResponse.body.id}/images`)
