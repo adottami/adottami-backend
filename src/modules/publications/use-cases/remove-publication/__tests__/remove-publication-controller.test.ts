@@ -4,17 +4,18 @@
 
 import request from 'supertest';
 
+import PrismaPublicationRepository from '@/modules/publications/infra/prisma/repositories/prisma-publication-repository';
+import PublicationRepository from '@/modules/publications/repositories/publication-repository';
 import User from '@/modules/users/entities/user';
 import app from '@/shared/infra/http/app';
 import HTTPResponse from '@/shared/infra/http/models/http-response';
 import prisma from '@/shared/infra/prisma/prisma-client';
 
-import { saveImageToFileSystem } from './utils';
-
-describe('Edit images controller', () => {
+describe('Remove publication controller', () => {
   let accessToken: string;
   let userData: User;
   let userId: string;
+  let publicationRepository: PublicationRepository;
 
   beforeEach(async () => {
     await prisma.publication.deleteMany();
@@ -35,9 +36,10 @@ describe('Edit images controller', () => {
 
     accessToken = responseToken.body.accessToken;
     userId = userCreationResponse.body.id;
+    publicationRepository = new PrismaPublicationRepository();
   });
 
-  it('should be able to edit images of the publication', async () => {
+  it('should be able to remove a publication', async () => {
     const publicationData = {
       author: userData,
       name: 'string',
@@ -53,6 +55,7 @@ describe('Edit images controller', () => {
       isArchived: true,
       hidePhoneNumber: false,
       characteristics: [],
+      images: [],
     };
 
     const createResponse = await request(app)
@@ -67,26 +70,13 @@ describe('Edit images controller', () => {
     expect(createResponse.body).toHaveProperty('createdAt');
     expect(createResponse.body.author.id).toBe(userId);
 
-    const imageFilePath = await saveImageToFileSystem('edit-images-controller');
-
-    const editResponse = await request(app)
-      .patch(`/publications/${createResponse.body.id}/images`)
-      .attach('images', imageFilePath)
+    const removeResponse = await request(app)
+      .delete(`/publications/${createResponse.body.id}`)
       .set({
-        'Content-Type': 'multipart/form-data',
         Authorization: `Bearer ${accessToken}`,
       });
 
-    expect(editResponse.statusCode).toBe(HTTPResponse.STATUS_CODE.OK);
-    expect(editResponse.body).toEqual({
-      ...createResponse.body,
-      images: [
-        {
-          id: expect.any(String),
-          url: expect.any(String),
-          createdAt: expect.any(String),
-        },
-      ],
-    });
+    expect(removeResponse.statusCode).toBe(HTTPResponse.STATUS_CODE.NO_CONTENT);
+    expect(await publicationRepository.findById(createResponse.body.id)).toBeNull();
   });
 });

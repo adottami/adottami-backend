@@ -1,0 +1,1 @@
+export type NumberAsString = `${number}`;

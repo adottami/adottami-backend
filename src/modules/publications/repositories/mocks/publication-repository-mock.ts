@@ -4,13 +4,13 @@ import User from '@/modules/users/entities/user';
 import NotFoundHTTPError from '@/shared/infra/http/errors/not-found-http-error';
 
 import Image from '../../entities/image';
-import PublicationRepository, { ParametersFindAll } from '../publication-repository';
+import PublicationRepository, { FindAllPublicationFilters } from '../publication-repository';
 
 class PublicationRepositoryMock implements PublicationRepository {
   constructor(private publications: Publication[] = []) {}
 
   async create(
-    authorId: string,
+    _authorId: string,
     {
       author,
       name,
@@ -56,22 +56,39 @@ class PublicationRepositoryMock implements PublicationRepository {
 
   findAll({
     city,
+    ignoreCityCase,
     state,
+    ignoreStateCase,
     categories,
     isArchived,
     authorId,
     page,
     perPage,
     orderBy,
-  }: ParametersFindAll): Promise<Publication[]> {
-    const publications = this.publications.filter(
-      (publication) =>
-        (!city || publication.city === city) &&
-        (!state || publication.state === state) &&
-        (!categories || categories.includes(publication.category)) &&
-        publication.isArchived === isArchived &&
-        (!authorId || publication.author.id === authorId),
-    );
+  }: FindAllPublicationFilters): Promise<Publication[]> {
+    const publications = this.publications.filter((publication) => {
+      const isIncludedInFilteredCity =
+        !city ||
+        (ignoreCityCase
+          ? publication.city.toLowerCase().includes(city.toLowerCase())
+          : publication.city.includes(city));
+      const isIncludedInFilteredState =
+        !state ||
+        (ignoreStateCase
+          ? publication.state.toLowerCase().includes(state.toLowerCase())
+          : publication.state.includes(state));
+      const isIncludedInFilteredCategory = !categories || categories.includes(publication.category);
+      const isIncludedInFilteredArchiveStatus = publication.isArchived === isArchived;
+      const isIncludedInFilteredAuthor = !authorId || publication.author.id === authorId;
+
+      return (
+        isIncludedInFilteredCity &&
+        isIncludedInFilteredState &&
+        isIncludedInFilteredCategory &&
+        isIncludedInFilteredArchiveStatus &&
+        isIncludedInFilteredAuthor
+      );
+    });
 
     const publicationsOrderByAndPage = publications
       .sort((publication, otherPublication) => {

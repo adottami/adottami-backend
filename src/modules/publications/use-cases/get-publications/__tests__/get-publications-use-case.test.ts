@@ -60,7 +60,41 @@ describe('Get publications use case', () => {
 
     const publications = await useCase.execute({
       city: 'Campina Grande',
+      ignoreCityCase: false,
       state: 'PB',
+      ignoreStateCase: false,
+      categories: '',
+      isArchived: false,
+      authorId: '',
+      page: 1,
+      perPage: 20,
+    });
+
+    expect(publications).toHaveLength(numPublications.length);
+    expect(getNameNumberList(publications)).toEqual(numPublications);
+  });
+
+  it('should be able to get the publications by filtering by city and state ignoring case', async () => {
+    const numPublications = [2, 3, 4, 8];
+
+    for (let i = 0; i < 10; i++) {
+      const modifyPublication = { ...publication, name: `publication_${i}` };
+
+      if (numPublications.includes(i)) {
+        await publicationRepository.create(
+          user.id,
+          Publication.create({ ...modifyPublication, city: 'Campina Grande', state: 'PB' }),
+        );
+      } else {
+        await publicationRepository.create(user.id, Publication.create(modifyPublication));
+      }
+    }
+
+    const publications = await useCase.execute({
+      city: 'campina GRANDE',
+      ignoreCityCase: true,
+      state: 'pb',
+      ignoreStateCase: true,
       categories: '',
       isArchived: false,
       authorId: '',
